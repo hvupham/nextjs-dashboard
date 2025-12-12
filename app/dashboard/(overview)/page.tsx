@@ -1,10 +1,12 @@
-import CardWrapper, { Card } from '@/app/ui/dashboard/cards';
+export const dynamic = "force-dynamic";
+import { Card } from '@/app/ui/dashboard/cards';
 import { lusitana } from '@/app/ui/fonts';
 import { fetchCardData } from '@/app/lib/data'; // Remove fetchLatestInvoices
 import { Suspense } from 'react';
 import {
     CardsSkeleton,
 } from '@/app/ui/skeletons';
+import CardWrapper from '@/app/ui/dashboard/CardWrapper';
 
 export default async function Page() {
     const {
@@ -30,11 +32,9 @@ export default async function Page() {
                 />
             </div>
             <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-                {/* <Suspense fallback={<CardsSkeleton />}>
+                <Suspense fallback={<CardsSkeleton />}>
                     <CardWrapper />
-                </Suspense> */}
-                <CardWrapper />
-
+                </Suspense>
             </div>
         </main>
     );
