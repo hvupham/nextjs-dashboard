@@ -7,6 +7,7 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  role: 'admin' | 'user';
 };
 
 export type Customer = {
@@ -85,4 +86,41 @@ export type InvoiceForm = {
   customer_id: string;
   amount: number;
   status: 'pending' | 'paid';
+};
+
+export type UsersTable = {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'user';
+};
+
+export type Product = {
+  id: string;
+  name: string;
+  type: 'sim' | 'pocket-wifi';
+  monthly_price: number;
+  description: string;
+  stock: number;
+  status: 'available' | 'out-of-stock';
+};
+
+export type ProductsTable = {
+  id: string;
+  name: string;
+  type: 'sim' | 'pocket-wifi';
+  monthly_price: number;
+  description: string;
+  stock: number;
+  status: 'available' | 'out-of-stock';
+};
+
+export type ProductForm = {
+  id: string;
+  name: string;
+  type: 'sim' | 'pocket-wifi';
+  monthly_price: number;
+  description: string;
+  stock: number;
+  status: 'available' | 'out-of-stock';
 };

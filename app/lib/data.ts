@@ -5,7 +5,10 @@ import {
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
+  ProductForm,
+  ProductsTable,
   Revenue,
+  UsersTable,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -216,3 +219,60 @@ export async function fetchFilteredCustomers(query: string) {
     throw new Error('Failed to fetch customer table.');
   }
 }
+
+export async function fetchUsers(): Promise<UsersTable[]> {
+  try {
+    const data = await sql<UsersTable[]>`
+      SELECT id, name, email, role
+      FROM users
+      ORDER BY name ASC
+    `;
+    return data;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch users.');
+  }
+}
+
+export async function fetchUserById(id: string) {
+  try {
+    const data = await sql<UsersTable[]>`
+      SELECT id, name, email, role
+      FROM users
+      WHERE id = ${id}
+    `;
+    return data[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
+
+export async function fetchProducts(): Promise<ProductsTable[]> {
+  try {
+    const data = await sql<ProductsTable[]>`
+      SELECT id, name, type, monthly_price, description, stock, status
+      FROM products
+      ORDER BY name ASC
+    `;
+    return data;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch products.');
+  }
+}
+
+export async function fetchProductById(id: string): Promise<ProductForm> {
+  try {
+    const data = await sql<ProductForm[]>`
+      SELECT id, name, type, monthly_price, description, stock, status
+      FROM products
+      WHERE id = ${id}
+    `;
+    return data[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch product.');
+  }
+}
+
