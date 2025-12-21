@@ -6,6 +6,42 @@ const users = [
     name: 'User',
     email: 'user@nextmail.com',
     password: '123456',
+    role: 'admin' as const,
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    password: '123456',
+    role: 'user' as const,
+  },
+  {
+    id: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+    name: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    password: '123456',
+    role: 'user' as const,
+  },
+  {
+    id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+    name: 'Mike Johnson',
+    email: 'mike.johnson@example.com',
+    password: '123456',
+    role: 'admin' as const,
+  },
+  {
+    id: '8f14e45f-ceea-467a-9538-1c9d8c8b4c2a',
+    name: 'Sarah Williams',
+    email: 'sarah.williams@example.com',
+    password: '123456',
+    role: 'user' as const,
+  },
+  {
+    id: '9b5c2b1d-5e8a-4c3d-b7a8-1f2d3e4a5b6c',
+    name: 'David Brown',
+    email: 'david.brown@example.com',
+    password: '123456',
+    role: 'user' as const,
   },
 ];
 
@@ -144,4 +180,62 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
-export { users, customers, invoices, revenue };
+const products = [
+  {
+    id: 'a1b2c3d4-e5f6-4789-a1b2-c3d4e5f67890',
+    name: 'Japan Travel SIM - 30 Days',
+    type: 'sim' as const,
+    monthly_price: 2500,
+    description: 'Unlimited data SIM card for 30 days in Japan',
+    stock: 50,
+    status: 'available' as const,
+  },
+  {
+    id: 'b2c3d4e5-f6a7-4890-b2c3-d4e5f6a78901',
+    name: 'Japan Pocket WiFi - Premium',
+    type: 'pocket-wifi' as const,
+    monthly_price: 5000,
+    description: 'High-speed pocket WiFi, up to 5 devices, unlimited data',
+    stock: 30,
+    status: 'available' as const,
+  },
+  {
+    id: 'c3d4e5f6-a7b8-4901-c3d4-e5f6a7b89012',
+    name: 'Asia Travel SIM - 30 Days',
+    type: 'sim' as const,
+    monthly_price: 3000,
+    description: 'Multi-country SIM for Asia (Japan, Korea, Thailand, etc.)',
+    stock: 40,
+    status: 'available' as const,
+  },
+  {
+    id: 'd4e5f6a7-b8c9-4012-d4e5-f6a7b8c90123',
+    name: 'Japan Pocket WiFi - Standard',
+    type: 'pocket-wifi' as const,
+    monthly_price: 3500,
+    description: 'Standard pocket WiFi, up to 3 devices, 10GB/day',
+    stock: 0,
+    status: 'out-of-stock' as const,
+  },
+  {
+    id: 'e5f6a7b8-c9d0-4123-e5f6-a7b8c9d01234',
+    name: 'Europe Travel SIM - 30 Days',
+    type: 'sim' as const,
+    monthly_price: 3500,
+    description: 'Unlimited data SIM for 30+ European countries',
+    stock: 25,
+    status: 'available' as const,
+  },
+  {
+    id: 'f6a7b8c9-d0e1-4234-f6a7-b8c9d0e12345',
+    name: 'Global Pocket WiFi',
+    type: 'pocket-wifi' as const,
+    monthly_price: 8000,
+    description: 'Works in 100+ countries, unlimited data, up to 5 devices',
+    stock: 15,
+    status: 'available' as const,
+  },
+];
+
+export { customers, invoices, products, revenue, users };
+

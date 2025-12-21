@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { customers, invoices, products, revenue, users } from '../lib/placeholder-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -11,17 +11,31 @@ async function seedUsers() {
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
+      password TEXT NOT NULL,
+      role VARCHAR(50) NOT NULL DEFAULT 'user'
     );
+  `;
+
+  // Add role column if it doesn't exist (for existing tables)
+  await sql`
+    DO $$ 
+    BEGIN 
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name='users' AND column_name='role'
+      ) THEN
+        ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user';
+      END IF;
+    END $$;
   `;
 
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       return sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
+        INSERT INTO users (id, name, email, password, role)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.role})
+        ON CONFLICT (id) DO UPDATE SET role = ${user.role};
       `;
     }),
   );
@@ -101,6 +115,34 @@ async function seedRevenue() {
   return insertedRevenue;
 }
 
+async function seedProducts() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS products (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      type VARCHAR(50) NOT NULL,
+      monthly_price INT NOT NULL,
+      description TEXT NOT NULL,
+      stock INT NOT NULL DEFAULT 0,
+      status VARCHAR(50) NOT NULL DEFAULT 'available'
+    );
+  `;
+
+  const insertedProducts = await Promise.all(
+    products.map(
+      (product) => sql`
+        INSERT INTO products (id, name, type, monthly_price, description, stock, status)
+        VALUES (${product.id}, ${product.name}, ${product.type}, ${product.monthly_price}, ${product.description}, ${product.stock}, ${product.status})
+        ON CONFLICT (id) DO NOTHING;
+      `,
+    ),
+  );
+
+  return insertedProducts;
+}
+
 export async function GET() {
   try {
     const result = await sql.begin((sql) => [
@@ -108,6 +150,7 @@ export async function GET() {
       seedCustomers(),
       seedInvoices(),
       seedRevenue(),
+      seedProducts(),
     ]);
 
     return Response.json({ message: 'Database seeded successfully' });
