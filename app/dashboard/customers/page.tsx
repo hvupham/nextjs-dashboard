@@ -1,4 +1,4 @@
-import { fetchFilteredCustomers } from '@/app/lib/data';
+import { fetchFilteredCustomers } from '@/app/lib/data/index';
 import CustomersTable from '@/app/ui/customers/table';
 import Search from '@/app/ui/search';
 import { Suspense } from 'react';
