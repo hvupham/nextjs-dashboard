@@ -14,6 +14,7 @@ export type Customer = {
   id: string;
   name: string;
   email: string;
+  phone_number?: string;
   image_url: string;
 };
 
@@ -22,9 +23,15 @@ export type Invoice = {
   customer_id: string;
   amount: number;
   date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
   status: 'pending' | 'paid';
+  product_type?: string;
+  data_type?: string;
+  sim_status?: 'xuat' | 'chua_xuat';
+  employee_id?: string;
+  export_date?: string;
+  tracking_number?: string;
+  package_months?: number;
+  notes?: string;
 };
 
 export type Revenue = {
@@ -54,26 +61,30 @@ export type InvoicesTable = {
   date: string;
   amount: number;
   status: 'pending' | 'paid';
+  product_type?: string;
+  data_type?: string;
+  sim_status?: string;
+  employee_id?: string;
+  export_date?: string;
+  tracking_number?: string;
+  package_months?: number;
+  notes?: string;
 };
 
 export type CustomersTableType = {
   id: string;
   name: string;
   email: string;
+  phone_number?: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: number;
-  total_paid: number;
 };
 
 export type FormattedCustomersTable = {
   id: string;
   name: string;
   email: string;
+  phone_number?: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
 };
 
 export type CustomerField = {
@@ -86,6 +97,14 @@ export type InvoiceForm = {
   customer_id: string;
   amount: number;
   status: 'pending' | 'paid';
+  product_type?: string;
+  data_type?: string;
+  sim_status?: string;
+  employee_id?: string;
+  export_date?: string;
+  tracking_number?: string;
+  package_months?: number;
+  notes?: string;
 };
 
 export type UsersTable = {

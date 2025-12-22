@@ -2,8 +2,9 @@ import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredInvoices } from '@/app/lib/data';
+import { fetchFilteredInvoices, fetchUserById } from '@/app/lib/data/index';
 import { SortButton } from '@/app/ui/sort-button';
+import { fetchUsersByIds } from '@/app/lib/actions/users';
 
 export default async function InvoicesTable({
   query,
@@ -16,7 +17,35 @@ export default async function InvoicesTable({
   sortBy?: string;
   sortOrder?: string;
 }) {
-  const invoices = await fetchFilteredInvoices(query, currentPage, sortBy, sortOrder as 'ASC' | 'DESC');
+  const rawInvoices = await fetchFilteredInvoices(query, currentPage, sortBy, sortOrder as 'ASC' | 'DESC');
+  const employeeIds = Array.from(
+    new Set(
+      rawInvoices
+        .map(i => i.employee_id)
+        .filter((id): id is string => Boolean(id))
+    )
+  );
+
+  console.log('Customer IDs:', employeeIds);
+  const users = await fetchUsersByIds(employeeIds);
+
+  const userMap = Object.fromEntries(
+    users.map(u => [u.id, u])
+  );
+
+
+  const invoices = rawInvoices.map(invoice => {
+    const employeeId = invoice.employee_id;
+
+    return {
+      ...invoice,
+      employeeName: employeeId
+        ? userMap[employeeId]?.name ?? 'Unassigned'
+        : 'Unassigned',
+    };
+  });
+
+
 
   return (
     <div className="mt-6 flow-root">
@@ -45,11 +74,23 @@ export default async function InvoicesTable({
                   <InvoiceStatus status={invoice.status} />
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">
-                      {formatCurrency(invoice.amount)}
-                    </p>
-                    <p>{formatDateToLocal(invoice.date)}</p>
+                  <div className="w-full">
+                    <p className="font-medium">{invoice.name}</p>
+                    {invoice.product_type && (
+                      <p className="text-sm text-gray-500">Sản phẩm: {invoice.product_type}</p>
+                    )}
+                    {invoice.data_type && (
+                      <p className="text-sm text-gray-500">Dữ liệu: {invoice.data_type}</p>
+                    )}
+                    {invoice.export_date && (
+                      <p className="text-sm text-gray-500">Xuất: {formatDateToLocal(invoice.export_date)}</p>
+                    )}
+                    {invoice.tracking_number && (
+                      <p className="text-sm text-gray-500">Mã: {invoice.tracking_number}</p>
+                    )}
+                    {invoice.notes && (
+                      <p className="text-sm text-gray-500">Ghi chú: {invoice.notes}</p>
+                    )}
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={invoice.id} />
@@ -72,28 +113,28 @@ export default async function InvoicesTable({
                   />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  Loại sản phẩm
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  <SortButton
-                    field="amount"
-                    label="Số tiền"
-                    currentSortBy={sortBy}
-                    currentSortOrder={sortOrder}
-                    baseUrl="/dashboard/invoices"
-                  />
+                  Loại dữ liệu
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  <SortButton
-                    field="date"
-                    label="Ngày"
-                    currentSortBy={sortBy}
-                    currentSortOrder={sortOrder}
-                    baseUrl="/dashboard/invoices"
-                  />
+                  Ngày nhận SIM
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Trạng thái
+                  Nhân viên chốt
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Ngày xuất SIM
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Mã gửi đơn
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Cước tháng
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Ghi chú
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Chỉnh sửa</span>
@@ -119,16 +160,28 @@ export default async function InvoicesTable({
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.email}
+                    {invoice.product_type || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(invoice.amount)}
+                    {invoice.data_type || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(invoice.date)}
+                    {invoice.date ? formatDateToLocal(invoice.date) : '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <InvoiceStatus status={invoice.status} />
+                    {invoice.employeeName || '-'}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {invoice.export_date ? formatDateToLocal(invoice.export_date) : '-'}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {invoice.tracking_number || '-'}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {invoice.package_months || '-'}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {invoice.notes || '-'}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

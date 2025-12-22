@@ -104,3 +104,14 @@ export async function deleteUser(id: string) {
         throw new Error('Failed to Delete User.');
     }
 }
+
+export async function fetchUsersByIds(ids: string[]) {
+    try {
+        const users = await sql`
+            SELECT * FROM users WHERE id = ANY(${ids})
+        `;
+        return users;
+    } catch (error) {
+        throw new Error('Failed to Fetch Users.');
+    }
+}

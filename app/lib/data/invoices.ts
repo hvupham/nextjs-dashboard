@@ -26,6 +26,14 @@ export async function fetchFilteredInvoices(
         invoices.amount,
         invoices.date,
         invoices.status,
+        invoices.product_type,
+        invoices.data_type,
+        invoices.sim_status,
+        invoices.employee_id,
+        invoices.export_date,
+        invoices.tracking_number,
+        invoices.package_months,
+        invoices.notes,
         customers.name,
         customers.email,
         customers.image_url
@@ -76,7 +84,15 @@ export async function fetchInvoiceById(id: string) {
         invoices.id,
         invoices.customer_id,
         invoices.amount,
-        invoices.status
+        invoices.status,
+        invoices.product_type,
+        invoices.data_type,
+        invoices.sim_status,
+        invoices.employee_id,
+        invoices.export_date,
+        invoices.tracking_number,
+        invoices.package_months,
+        invoices.notes
       FROM invoices
       WHERE invoices.id = ${id};
     `;

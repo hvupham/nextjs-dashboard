@@ -129,6 +129,76 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </div>
           </div>
         </fieldset>
+
+        {/* Product Type */}
+        <div className="mb-4">
+          <label htmlFor="productType" className="mb-2 block text-sm font-medium">
+            Loại sản phẩm (Tùy chọn)
+          </label>
+          <input
+            id="productType"
+            name="productType"
+            type="text"
+            placeholder="VD: SIM, Data, v.v..."
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+          />
+        </div>
+
+        {/* Data Type */}
+        <div className="mb-4">
+          <label htmlFor="dataType" className="mb-2 block text-sm font-medium">
+            Loại dữ liệu (Tùy chọn)
+          </label>
+          <input
+            id="dataType"
+            name="dataType"
+            type="text"
+            placeholder="VD: 4G, 5G, v.v..."
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+          />
+        </div>
+
+        {/* Tracking Number */}
+        <div className="mb-4">
+          <label htmlFor="trackingNumber" className="mb-2 block text-sm font-medium">
+            Số theo dõi (Tùy chọn)
+          </label>
+          <input
+            id="trackingNumber"
+            name="trackingNumber"
+            type="text"
+            placeholder="Nhập số theo dõi"
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+          />
+        </div>
+
+        {/* Package Months */}
+        <div className="mb-4">
+          <label htmlFor="packageMonths" className="mb-2 block text-sm font-medium">
+            Số tháng gói (Tùy chọn)
+          </label>
+          <input
+            id="packageMonths"
+            name="packageMonths"
+            type="number"
+            placeholder="VD: 12"
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+          />
+        </div>
+
+        {/* Notes */}
+        <div className="mb-4">
+          <label htmlFor="notes" className="mb-2 block text-sm font-medium">
+            Ghi chú (Tùy chọn)
+          </label>
+          <textarea
+            id="notes"
+            name="notes"
+            placeholder="Nhập ghi chú"
+            rows={3}
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+          />
+        </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link

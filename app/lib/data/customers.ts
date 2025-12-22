@@ -1,8 +1,28 @@
 import postgres from 'postgres';
-import { CustomerField, CustomersTableType, FormattedCustomersTable } from '../definitions';
+import { Customer, CustomerField, CustomersTableType, FormattedCustomersTable } from '../definitions';
 import { formatCurrency } from '../utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
+export async function fetchCustomerById(id: string): Promise<Customer | undefined> {
+    try {
+        const customer = await sql<Customer[]>`
+      SELECT
+        id,
+        name,
+        email,
+        phone_number,
+        image_url
+      FROM customers
+      WHERE id = ${id}
+    `;
+
+        return customer[0];
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch customer.');
+    }
+}
 
 export async function fetchCustomers() {
     try {
@@ -27,40 +47,27 @@ export async function fetchFilteredCustomers(
     sortOrder: 'ASC' | 'DESC' = 'ASC',
 ): Promise<FormattedCustomersTable[]> {
     try {
-        const validSortFields = ['name', 'email', 'total_invoices', 'total_pending', 'total_paid'];
+        const validSortFields = ['name', 'email'];
         const sortField = validSortFields.includes(sortBy) ? sortBy : 'name';
 
         let orderField = 'customers.name';
         if (sortField === 'email') orderField = 'customers.email';
-        else if (sortField === 'total_invoices') orderField = 'total_invoices';
-        else if (sortField === 'total_pending') orderField = 'total_pending';
-        else if (sortField === 'total_paid') orderField = 'total_paid';
 
         const data = await sql<CustomersTableType[]>`
 		SELECT
 		  customers.id,
 		  customers.name,
 		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
+		  customers.phone_number,
+		  customers.image_url
 		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
 		WHERE
 		  customers.name ILIKE ${`%${query}%`} OR
         customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
 		ORDER BY ${sql(orderField)} ${sql.unsafe(sortOrder)}
 	  `;
 
-        const customers = data.map((customer) => ({
-            ...customer,
-            total_pending: formatCurrency(customer.total_pending),
-            total_paid: formatCurrency(customer.total_paid),
-        }));
-
-        return customers;
+        return data;
     } catch (err) {
         console.error('Database Error:', err);
         throw new Error('Failed to fetch customer table.');

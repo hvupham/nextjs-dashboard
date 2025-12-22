@@ -1,4 +1,4 @@
-import { fetchUsers } from '@/app/lib/data';
+import { fetchUsers } from '@/app/lib/data/index';
 import { CreateUser } from '@/app/ui/users/buttons';
 import UsersTableComponent from '@/app/ui/users/table';
 import { Suspense } from 'react';
