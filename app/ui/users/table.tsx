@@ -21,7 +21,7 @@ export default async function UsersTableComponent({
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                   <SortButton
                     field="name"
-                    label="Name"
+                    label="Tên"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/users"
@@ -39,14 +39,14 @@ export default async function UsersTableComponent({
                 <th scope="col" className="px-3 py-5 font-medium">
                   <SortButton
                     field="role"
-                    label="Role"
+                    label="Vai trò"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/users"
                   />
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                  <span className="sr-only">Chỉnh sửa</span>
                 </th>
               </tr>
             </thead>
@@ -67,11 +67,11 @@ export default async function UsersTableComponent({
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${user.role === 'admin'
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'bg-gray-100 text-gray-600'
+                        ? 'bg-blue-100 text-blue-600'
+                        : 'bg-gray-100 text-gray-600'
                         }`}
                     >
-                      {user.role}
+                      {user.role === 'admin' ? 'Quản trị viên' : 'Người dùng'}
                     </span>
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
