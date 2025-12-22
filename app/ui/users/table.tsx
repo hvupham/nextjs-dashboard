@@ -1,10 +1,15 @@
 import { UsersTable } from '@/app/lib/definitions';
 import { DeleteUser, UpdateUser } from '@/app/ui/users/buttons';
+import { SortButton } from '@/app/ui/sort-button';
 
 export default async function UsersTableComponent({
   users,
+  sortBy = 'name',
+  sortOrder = 'ASC',
 }: {
   users: UsersTable[];
+  sortBy?: string;
+  sortOrder?: string;
 }) {
   return (
     <div className="mt-6 flow-root">
@@ -14,13 +19,31 @@ export default async function UsersTableComponent({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Name
+                  <SortButton
+                    field="name"
+                    label="Name"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/users"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  <SortButton
+                    field="email"
+                    label="Email"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/users"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Role
+                  <SortButton
+                    field="role"
+                    label="Role"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/users"
+                  />
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -43,11 +66,10 @@ export default async function UsersTableComponent({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
-                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                        user.role === 'admin'
+                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${user.role === 'admin'
                           ? 'bg-blue-100 text-blue-600'
                           : 'bg-gray-100 text-gray-600'
-                      }`}
+                        }`}
                     >
                       {user.role}
                     </span>

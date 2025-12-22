@@ -3,8 +3,17 @@ import { CreateProduct } from '@/app/ui/products/buttons';
 import ProductsTableComponent from '@/app/ui/products/table';
 import { Suspense } from 'react';
 
-export default async function Page() {
-  const products = await fetchProducts();
+export default async function Page(props: {
+  searchParams?: Promise<{
+    sortBy?: string;
+    sortOrder?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const sortBy = searchParams?.sortBy || 'name';
+  const sortOrder = (searchParams?.sortOrder || 'ASC') as 'ASC' | 'DESC';
+
+  const products = await fetchProducts(sortBy, sortOrder);
 
   return (
     <div className="w-full">
@@ -15,7 +24,7 @@ export default async function Page() {
         <CreateProduct />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <ProductsTableComponent products={products} />
+        <ProductsTableComponent products={products} sortBy={sortBy} sortOrder={sortOrder} />
       </Suspense>
     </div>
   );
