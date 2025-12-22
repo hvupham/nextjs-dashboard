@@ -3,15 +3,20 @@ import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/data';
+import { SortButton } from '@/app/ui/sort-button';
 
 export default async function InvoicesTable({
   query,
   currentPage,
+  sortBy = 'date',
+  sortOrder = 'DESC',
 }: {
   query: string;
   currentPage: number;
+  sortBy?: string;
+  sortOrder?: string;
 }) {
-  const invoices = await fetchFilteredInvoices(query, currentPage);
+  const invoices = await fetchFilteredInvoices(query, currentPage, sortBy, sortOrder as 'ASC' | 'DESC');
 
   return (
     <div className="mt-6 flow-root">
@@ -58,16 +63,34 @@ export default async function InvoicesTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  <SortButton
+                    field="name"
+                    label="Customer"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/invoices"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Email
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  <SortButton
+                    field="amount"
+                    label="Amount"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/invoices"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
+                  <SortButton
+                    field="date"
+                    label="Date"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/invoices"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status

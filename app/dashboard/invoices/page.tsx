@@ -15,11 +15,15 @@ export default async function Page(props: {
     searchParams?: Promise<{
         query?: string;
         page?: string;
+        sortBy?: string;
+        sortOrder?: string;
     }>;
 }) {
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
+    const sortBy = searchParams?.sortBy || 'date';
+    const sortOrder = (searchParams?.sortOrder || 'DESC') as 'ASC' | 'DESC';
     const totalPages = await fetchInvoicesPages(query);
 
     return (
@@ -32,7 +36,7 @@ export default async function Page(props: {
                 <CreateInvoice />
             </div>
             <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-                <Table query={query} currentPage={currentPage} />
+                <Table query={query} currentPage={currentPage} sortBy={sortBy} sortOrder={sortOrder} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
                 <Pagination totalPages={totalPages} />

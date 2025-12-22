@@ -1,22 +1,22 @@
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
 import {
   CustomersTableType,
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
+import { SortButton } from '@/app/ui/sort-button';
 
 export default async function CustomersTable({
   customers,
+  sortBy = 'name',
+  sortOrder = 'ASC',
 }: {
   customers: FormattedCustomersTable[];
+  sortBy?: string;
+  sortOrder?: string;
 }) {
   return (
     <div className="w-full">
-      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
-        Customers
-      </h1>
-      <Search placeholder="Search customers..." />
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -66,19 +66,49 @@ export default async function CustomersTable({
                 <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                   <tr>
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                      Name
+                      <SortButton
+                        field="name"
+                        label="Name"
+                        currentSortBy={sortBy}
+                        currentSortOrder={sortOrder}
+                        baseUrl="/dashboard/customers"
+                      />
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Email
+                      <SortButton
+                        field="email"
+                        label="Email"
+                        currentSortBy={sortBy}
+                        currentSortOrder={sortOrder}
+                        baseUrl="/dashboard/customers"
+                      />
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Total Invoices
+                      <SortButton
+                        field="total_invoices"
+                        label="Total Invoices"
+                        currentSortBy={sortBy}
+                        currentSortOrder={sortOrder}
+                        baseUrl="/dashboard/customers"
+                      />
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Total Pending
+                      <SortButton
+                        field="total_pending"
+                        label="Total Pending"
+                        currentSortBy={sortBy}
+                        currentSortOrder={sortOrder}
+                        baseUrl="/dashboard/customers"
+                      />
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
-                      Total Paid
+                      <SortButton
+                        field="total_paid"
+                        label="Total Paid"
+                        currentSortBy={sortBy}
+                        currentSortOrder={sortOrder}
+                        baseUrl="/dashboard/customers"
+                      />
                     </th>
                   </tr>
                 </thead>

@@ -1,11 +1,16 @@
 import { ProductsTable } from '@/app/lib/definitions';
 import { formatCurrency } from '@/app/lib/utils';
 import { DeleteProduct, UpdateProduct } from '@/app/ui/products/buttons';
+import { SortButton } from '@/app/ui/sort-button';
 
 export default async function ProductsTableComponent({
   products,
+  sortBy = 'name',
+  sortOrder = 'ASC',
 }: {
   products: ProductsTable[];
+  sortBy?: string;
+  sortOrder?: string;
 }) {
   return (
     <div className="mt-6 flow-root">
@@ -15,19 +20,49 @@ export default async function ProductsTableComponent({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Name
+                  <SortButton
+                    field="name"
+                    label="Name"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/products"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Type
+                  <SortButton
+                    field="type"
+                    label="Type"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/products"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Monthly Price
+                  <SortButton
+                    field="monthly_price"
+                    label="Monthly Price"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/products"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Stock
+                  <SortButton
+                    field="stock"
+                    label="Stock"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/products"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  <SortButton
+                    field="status"
+                    label="Status"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/products"
+                  />
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -48,11 +83,10 @@ export default async function ProductsTableComponent({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
-                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                        product.type === 'sim'
+                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${product.type === 'sim'
                           ? 'bg-purple-100 text-purple-600'
                           : 'bg-green-100 text-green-600'
-                      }`}
+                        }`}
                     >
                       {product.type === 'sim' ? 'SIM Card' : 'Pocket WiFi'}
                     </span>
@@ -65,11 +99,10 @@ export default async function ProductsTableComponent({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
-                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                        product.status === 'available'
+                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${product.status === 'available'
                           ? 'bg-green-100 text-green-600'
                           : 'bg-red-100 text-red-600'
-                      }`}
+                        }`}
                     >
                       {product.status === 'available' ? 'Available' : 'Out of Stock'}
                     </span>
