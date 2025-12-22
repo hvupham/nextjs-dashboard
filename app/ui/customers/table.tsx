@@ -5,6 +5,7 @@ import {
   FormattedCustomersTable,
 } from '@/app/lib/definitions';
 import { SortButton } from '@/app/ui/sort-button';
+import { UpdateCustomer, DeleteCustomer } from '@/app/ui/customers/buttons';
 
 export default async function CustomersTable({
   customers,
@@ -44,20 +45,16 @@ export default async function CustomersTable({
                         <p className="text-sm text-gray-500">
                           {customer.email}
                         </p>
+                        <p className="text-sm text-gray-500">
+                          {customer.phone_number || '-'}
+                        </p>
                       </div>
                     </div>
-                    <div className="flex w-full items-center justify-between border-b py-5">
-                      <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Đang chờ</p>
-                        <p className="font-medium">{customer.total_pending}</p>
+                    <div className="flex w-full items-center justify-between pt-4">
+                      <div className="flex gap-2">
+                        <UpdateCustomer id={customer.id} />
+                        <DeleteCustomer id={customer.id} />
                       </div>
-                      <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Đã nhận</p>
-                        <p className="font-medium">{customer.total_paid}</p>
-                      </div>
-                    </div>
-                    <div className="pt-4 text-sm">
-                      <p>{customer.total_invoices} hóa đơn</p>
                     </div>
                   </div>
                 ))}
@@ -83,33 +80,8 @@ export default async function CustomersTable({
                         baseUrl="/dashboard/customers"
                       />
                     </th>
-                    <th scope="col" className="px-3 py-5 font-medium">
-                      <SortButton
-                        field="total_invoices"
-                        label="Tổng hóa đơn"
-                        currentSortBy={sortBy}
-                        currentSortOrder={sortOrder}
-                        baseUrl="/dashboard/customers"
-                      />
-                    </th>
-                    <th scope="col" className="px-3 py-5 font-medium">
-                      <SortButton
-                        field="total_pending"
-                        label="Tổng đang chờ"
-                        currentSortBy={sortBy}
-                        currentSortOrder={sortOrder}
-                        baseUrl="/dashboard/customers"
-                      />
-                    </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
-                      <SortButton
-                        field="total_paid"
-                        label="Tổng đã nhận"
-                        currentSortBy={sortBy}
-                        currentSortOrder={sortOrder}
-                        baseUrl="/dashboard/customers"
-                      />
-                    </th>
+                    <th scope="col" className="px-3 py-5 font-medium">Số điện thoại</th>
+                    <th scope="col" className="px-3 py-5 font-medium">Hành động</th>
                   </tr>
                 </thead>
 
@@ -132,13 +104,13 @@ export default async function CustomersTable({
                         {customer.email}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_invoices}
-                      </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {customer.total_pending}
+                        {customer.phone_number || '-'}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
-                        {customer.total_paid}
+                        <div className="flex gap-2">
+                          <UpdateCustomer id={customer.id} />
+                          <DeleteCustomer id={customer.id} />
+                        </div>
                       </td>
                     </tr>
                   ))}

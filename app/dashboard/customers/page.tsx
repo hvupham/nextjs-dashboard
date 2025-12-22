@@ -1,6 +1,7 @@
 import { fetchFilteredCustomers } from '@/app/lib/data/index';
 import CustomersTable from '@/app/ui/customers/table';
 import Search from '@/app/ui/search';
+import { CreateCustomer } from '@/app/ui/customers/buttons';
 import { Suspense } from 'react';
 
 export default async function Page(props: {
@@ -20,7 +21,8 @@ export default async function Page(props: {
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
-                <h1 className="text-2xl">Customers</h1>
+                <h1 className="text-2xl">Khách hàng</h1>
+                <CreateCustomer />
             </div>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                 <Search placeholder="Tìm kiếm khách hàng..." />
