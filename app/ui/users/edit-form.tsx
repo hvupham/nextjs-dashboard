@@ -4,8 +4,8 @@ import { UserState, updateUser } from '@/app/lib/actions/users';
 import { UsersTable } from '@/app/lib/definitions';
 import { Button } from '@/app/ui/button';
 import {
-    EnvelopeIcon,
-    UserCircleIcon,
+  EnvelopeIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useActionState } from 'react';
@@ -135,9 +135,9 @@ export default function EditUserForm({ user }: { user: UsersTable }) {
           href="/dashboard/users"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Hủy bỏ
         </Link>
-        <Button type="submit">Edit User</Button>
+        <Button type="submit">Chỉnh sửa người dùng</Button>
       </div>
     </form>
   );

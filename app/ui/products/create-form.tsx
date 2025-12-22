@@ -15,13 +15,13 @@ export default function Form() {
         {/* Product Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Product Name
+            Tên sản phẩm
           </label>
           <input
             id="name"
             name="name"
             type="text"
-            placeholder="Enter product name"
+            placeholder="Nhập tên sản phẩm"
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
             aria-describedby="name-error"
           />
@@ -38,7 +38,7 @@ export default function Form() {
         {/* Product Type */}
         <fieldset className="mb-4">
           <legend className="mb-2 block text-sm font-medium">
-            Product Type
+            Loại sản phẩm
           </legend>
           <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
             <div className="flex gap-4">
@@ -89,14 +89,14 @@ export default function Form() {
         {/* Monthly Price */}
         <div className="mb-4">
           <label htmlFor="monthly_price" className="mb-2 block text-sm font-medium">
-            Monthly Rental Price (¥)
+            Giá thuê háng tháng (¥)
           </label>
           <input
             id="monthly_price"
             name="monthly_price"
             type="number"
             step="100"
-            placeholder="Enter monthly price"
+            placeholder="Nhập giá tháng"
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
             aria-describedby="monthly_price-error"
           />
@@ -113,13 +113,13 @@ export default function Form() {
         {/* Description */}
         <div className="mb-4">
           <label htmlFor="description" className="mb-2 block text-sm font-medium">
-            Description
+            Mô tả
           </label>
           <textarea
             id="description"
             name="description"
             rows={3}
-            placeholder="Enter product description"
+            placeholder="Nhập mô tả sản phẩm"
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
             aria-describedby="description-error"
           />
@@ -136,13 +136,13 @@ export default function Form() {
         {/* Stock */}
         <div className="mb-4">
           <label htmlFor="stock" className="mb-2 block text-sm font-medium">
-            Stock Quantity
+            Số lượng tổn kho
           </label>
           <input
             id="stock"
             name="stock"
             type="number"
-            placeholder="Enter stock quantity"
+            placeholder="Nhập số lượng tốn kho"
             defaultValue="0"
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
             aria-describedby="stock-error"
@@ -160,7 +160,7 @@ export default function Form() {
         {/* Status */}
         <fieldset className="mb-4">
           <legend className="mb-2 block text-sm font-medium">
-            Status
+            Trạng thái
           </legend>
           <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
             <div className="flex gap-4">
@@ -178,7 +178,7 @@ export default function Form() {
                   htmlFor="available"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600"
                 >
-                  Available
+                  Có sẵn
                 </label>
               </div>
               <div className="flex items-center">
@@ -193,7 +193,7 @@ export default function Form() {
                   htmlFor="out-of-stock"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 text-xs font-medium text-red-600"
                 >
-                  Out of Stock
+                  Hết hàng
                 </label>
               </div>
             </div>
@@ -219,9 +219,9 @@ export default function Form() {
           href="/dashboard/products"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Hủy bỏ
         </Link>
-        <Button type="submit">Create Product</Button>
+        <Button type="submit">Tạo sản phẩm</Button>
       </div>
     </form>
   );

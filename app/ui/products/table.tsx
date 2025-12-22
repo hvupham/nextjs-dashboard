@@ -22,7 +22,7 @@ export default async function ProductsTableComponent({
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                   <SortButton
                     field="name"
-                    label="Name"
+                    label="Tên"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/products"
@@ -31,7 +31,7 @@ export default async function ProductsTableComponent({
                 <th scope="col" className="px-3 py-5 font-medium">
                   <SortButton
                     field="type"
-                    label="Type"
+                    label="Loại"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/products"
@@ -40,7 +40,7 @@ export default async function ProductsTableComponent({
                 <th scope="col" className="px-3 py-5 font-medium">
                   <SortButton
                     field="monthly_price"
-                    label="Monthly Price"
+                    label="Giá tháng"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/products"
@@ -49,7 +49,7 @@ export default async function ProductsTableComponent({
                 <th scope="col" className="px-3 py-5 font-medium">
                   <SortButton
                     field="stock"
-                    label="Stock"
+                    label="Tồn kho"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/products"
@@ -58,14 +58,14 @@ export default async function ProductsTableComponent({
                 <th scope="col" className="px-3 py-5 font-medium">
                   <SortButton
                     field="status"
-                    label="Status"
+                    label="Trạng thái"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
                     baseUrl="/dashboard/products"
                   />
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                  <span className="sr-only">Chỉnh sửa</span>
                 </th>
               </tr>
             </thead>
@@ -84,8 +84,8 @@ export default async function ProductsTableComponent({
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${product.type === 'sim'
-                          ? 'bg-purple-100 text-purple-600'
-                          : 'bg-green-100 text-green-600'
+                        ? 'bg-purple-100 text-purple-600'
+                        : 'bg-green-100 text-green-600'
                         }`}
                     >
                       {product.type === 'sim' ? 'SIM Card' : 'Pocket WiFi'}
@@ -100,8 +100,8 @@ export default async function ProductsTableComponent({
                   <td className="whitespace-nowrap px-3 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${product.status === 'available'
-                          ? 'bg-green-100 text-green-600'
-                          : 'bg-red-100 text-red-600'
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-red-100 text-red-600'
                         }`}
                     >
                       {product.status === 'available' ? 'Available' : 'Out of Stock'}
