@@ -6,9 +6,9 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Users', href: '/dashboard/users' },
+          { label: 'Người dùng', href: '/dashboard/users' },
           {
-            label: 'Create User',
+            label: 'Tạo người dùng',
             href: '/dashboard/users/create',
             active: true,
           },

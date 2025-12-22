@@ -13,15 +13,15 @@ import { usePathname } from 'next/navigation';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Trang chủ', href: '/dashboard', icon: HomeIcon },
   {
-    name: 'Invoices',
+    name: 'Hóa đơn',
     href: '/dashboard/invoices',
     icon: DocumentDuplicateIcon,
   },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-  { name: 'Products', href: '/dashboard/products', icon: ShoppingBagIcon },
-  { name: 'Users', href: '/dashboard/users', icon: UsersIcon },
+  { name: 'Khách hàng', href: '/dashboard/customers', icon: UserGroupIcon },
+  { name: 'Sản phẩm', href: '/dashboard/products', icon: ShoppingBagIcon },
+  { name: 'Người dùng', href: '/dashboard/users', icon: UsersIcon },
 ];
 
 export default function NavLinks() {

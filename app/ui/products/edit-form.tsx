@@ -226,9 +226,9 @@ export default function EditProductForm({ product }: { product: ProductForm }) {
           href="/dashboard/products"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Hủy bỏ
         </Link>
-        <Button type="submit">Update Product</Button>
+        <Button type="submit">Cập nhật sản phẩm</Button>
       </div>
     </form>
   );
