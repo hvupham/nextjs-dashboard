@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import Form from '@/app/ui/subscriptions/create-form';
 import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
-import { fetchCustomers, fetchsubscriptionById } from '@/app/lib/data';
+import { fetchCustomers } from '@/app/lib/data';
 
 export default async function Page() {
     const customers = await fetchCustomers();

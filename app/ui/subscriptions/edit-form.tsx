@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField, subscriptionForm } from '@/app/lib/definitions';
+import { CustomerField, Subscription } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
@@ -16,7 +16,7 @@ export default function EditsubscriptionForm({
   subscription,
   customers,
 }: {
-  subscription: subscriptionForm;
+  subscription: Subscription;
   customers: CustomerField[];
 }) {
   const initialState: State = { message: null, errors: {} };

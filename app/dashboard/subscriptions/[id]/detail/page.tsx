@@ -75,6 +75,7 @@ export default async function SubscriptionDetailPage({
   const { id } = await params;
   const subscription = await fetchSubscriptionById(id);
   const monthlyPayments = await fetchMonthlyPaymentsBySubscriptionId(id);
+  console.log('subscription', monthlyPayments);
 
   if (!subscription) {
     notFound();

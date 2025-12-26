@@ -1,6 +1,6 @@
 import Form from '@/app/ui/subscriptions/edit-form';
 import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
-import { fetchCustomers, fetchsubscriptionById } from '@/app/lib/data';
+import { fetchCustomers, fetchSubscriptionById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
@@ -8,7 +8,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     const id = params.id;
 
     const [subscription, customers] = await Promise.all([
-        fetchsubscriptionById(id),
+        fetchSubscriptionById(id),
         fetchCustomers(),
     ]);
     if (!subscription) {
