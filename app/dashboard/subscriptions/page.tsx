@@ -1,15 +1,15 @@
-import Pagination from '@/app/ui/invoices/pagination';
+import Pagination from '@/app/ui/subscriptions/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/invoices/table';
-import { CreateInvoice } from '@/app/ui/invoices/buttons';
+import Table from '@/app/ui/subscriptions/table';
+import { Createsubscription } from '@/app/ui/subscriptions/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { Suspense } from 'react';
-import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { SubscriptionsTableSkeleton } from '@/app/ui/skeletons';
+import { fetchSubscriptionsPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Invoices | Acme Dashboard',
+    title: 'subscriptions | Acme Dashboard',
 };
 export default async function Page(props: {
     searchParams?: Promise<{
@@ -24,18 +24,18 @@ export default async function Page(props: {
     const currentPage = Number(searchParams?.page) || 1;
     const sortBy = searchParams?.sortBy || 'date';
     const sortOrder = (searchParams?.sortOrder || 'DESC') as 'ASC' | 'DESC';
-    const totalPages = await fetchInvoicesPages(query);
+    const totalPages = await fetchSubscriptionsPages(query);
 
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
-                <h1 className={`${lusitana.className} text-2xl`}>Invoices</h1>
+                <h1 className={`${lusitana.className} text-2xl`}>subscriptions</h1>
             </div>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
                 <Search placeholder="Tìm kiếm hóa đơn..." />
-                <CreateInvoice />
+                <Createsubscription />
             </div>
-            <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+            <Suspense key={query + currentPage} fallback={<SubscriptionsTableSkeleton />}>
                 <Table query={query} currentPage={currentPage} sortBy={sortBy} sortOrder={sortOrder} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">

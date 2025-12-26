@@ -1,11 +1,11 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { deleteInvoice } from '@/app/lib/actions';
-import { DeleteInvoiceButton } from './delete-invoice-button';
-export function CreateInvoice() {
+import { deletesubscription } from '@/app/lib/actions';
+import { DeletesubscriptionButton } from './delete-subscriptions-button';
+export function Createsubscription() {
   return (
     <Link
-      href="/dashboard/invoices/create"
+      href="/dashboard/subscriptions/create"
       className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
     >
       <span className="hidden md:block">Tạo hóa đơn</span>{' '}
@@ -14,10 +14,10 @@ export function CreateInvoice() {
   );
 }
 
-export function UpdateInvoice({ id }: { id: string }) {
+export function Updatesubscription({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/invoices/${id}/edit`}
+      href={`/dashboard/subscriptions/${id}/edit`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
@@ -25,9 +25,9 @@ export function UpdateInvoice({ id }: { id: string }) {
   );
 }
 
-export function DeleteInvoice({ id }: { id: string }) {
-  const deleteInvoiceWithId = deleteInvoice.bind(null, id);
+export function Deletesubscription({ id }: { id: string }) {
+  const deletesubscriptionWithId = deletesubscription.bind(null, id);
   return (
-    <DeleteInvoiceButton action={deleteInvoiceWithId} />
+    <DeletesubscriptionButton action={deletesubscriptionWithId} />
   );
 }

@@ -1,5 +1,5 @@
 import { fetchUserById } from '@/app/lib/data';
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
 import Form from '@/app/ui/users/edit-form';
 import { notFound } from 'next/navigation';
 

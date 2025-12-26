@@ -1,4 +1,4 @@
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
 import Form from '@/app/ui/products/create-form';
 
 export default async function Page() {

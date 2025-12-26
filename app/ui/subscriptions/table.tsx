@@ -1,12 +1,13 @@
-import Image from 'next/image';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
-import InvoiceStatus from '@/app/ui/invoices/status';
+import Link from 'next/link';
+import { Updatesubscription, Deletesubscription } from '@/app/ui/subscriptions/buttons';
+import SubscriptionStatus from '@/app/ui/subscriptions/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredInvoices, fetchUserById } from '@/app/lib/data/index';
+import { fetchFilteredSubscriptions, fetchUserById } from '@/app/lib/data/index';
 import { SortButton } from '@/app/ui/sort-button';
 import { fetchUsersByIds } from '@/app/lib/actions/users';
+import { EyeIcon } from '@heroicons/react/24/outline';
 
-export default async function InvoicesTable({
+export default async function subscriptionsTable({
   query,
   currentPage,
   sortBy = 'date',
@@ -17,10 +18,10 @@ export default async function InvoicesTable({
   sortBy?: string;
   sortOrder?: string;
 }) {
-  const rawInvoices = await fetchFilteredInvoices(query, currentPage, sortBy, sortOrder as 'ASC' | 'DESC');
+  const rawsubscriptions = await fetchFilteredSubscriptions(query, currentPage, sortBy, sortOrder as 'ASC' | 'DESC');
   const employeeIds = Array.from(
     new Set(
-      rawInvoices
+      rawsubscriptions
         .map(i => i.employee_id)
         .filter((id): id is string => Boolean(id))
     )
@@ -34,11 +35,11 @@ export default async function InvoicesTable({
   );
 
 
-  const invoices = rawInvoices.map(invoice => {
-    const employeeId = invoice.employee_id;
+  const subscriptions = rawsubscriptions.map(subscription => {
+    const employeeId = subscription.employee_id;
 
     return {
-      ...invoice,
+      ...subscription,
       employeeName: employeeId
         ? userMap[employeeId]?.name ?? 'Unassigned'
         : 'Unassigned',
@@ -52,49 +53,49 @@ export default async function InvoicesTable({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {invoices?.map((invoice) => (
+            {subscriptions?.map((subscription) => (
               <div
-                key={invoice.id}
+                key={subscription.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <Image
-                        src={invoice.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      />
-                      <p>{invoice.name}</p>
+                      <p>{subscription.name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{invoice.email}</p>
+                    <p className="text-sm text-gray-500">{subscription.email}</p>
                   </div>
-                  <InvoiceStatus status={invoice.status} />
+                  <SubscriptionStatus status={subscription.status} />
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div className="w-full">
-                    <p className="font-medium">{invoice.name}</p>
-                    {invoice.product_type && (
-                      <p className="text-sm text-gray-500">Sản phẩm: {invoice.product_type}</p>
+                    <p className="font-medium">{subscription.name}</p>
+                    {subscription.product_type && (
+                      <p className="text-sm text-gray-500">Sản phẩm: {subscription.product_type}</p>
                     )}
-                    {invoice.data_type && (
-                      <p className="text-sm text-gray-500">Dữ liệu: {invoice.data_type}</p>
+                    {subscription.data_type && (
+                      <p className="text-sm text-gray-500">Dữ liệu: {subscription.data_type}</p>
                     )}
-                    {invoice.export_date && (
-                      <p className="text-sm text-gray-500">Xuất: {formatDateToLocal(invoice.export_date)}</p>
+                    {subscription.export_date && (
+                      <p className="text-sm text-gray-500">Xuất: {formatDateToLocal(subscription.export_date)}</p>
                     )}
-                    {invoice.tracking_number && (
-                      <p className="text-sm text-gray-500">Mã: {invoice.tracking_number}</p>
+                    {subscription.tracking_number && (
+                      <p className="text-sm text-gray-500">Mã: {subscription.tracking_number}</p>
                     )}
-                    {invoice.notes && (
-                      <p className="text-sm text-gray-500">Ghi chú: {invoice.notes}</p>
+                    {subscription.notes && (
+                      <p className="text-sm text-gray-500">Ghi chú: {subscription.notes}</p>
                     )}
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateInvoice id={invoice.id} />
-                    <DeleteInvoice id={invoice.id} />
+                    <Link
+                      href={`/dashboard/subscriptions/${subscription.id}/detail`}
+                      className="rounded-md border p-2 hover:bg-gray-100"
+                      title="Chi tiết"
+                    >
+                      <EyeIcon className="w-5" />
+                    </Link>
+                    <Updatesubscription id={subscription.id} />
+                    <Deletesubscription id={subscription.id} />
                   </div>
                 </div>
               </div>
@@ -109,7 +110,7 @@ export default async function InvoicesTable({
                     label="Khách hàng"
                     currentSortBy={sortBy}
                     currentSortOrder={sortOrder}
-                    baseUrl="/dashboard/invoices"
+                    baseUrl="/dashboard/subscriptions"
                   />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
@@ -142,51 +143,51 @@ export default async function InvoicesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {invoices?.map((invoice) => (
+              {subscriptions?.map((subscription) => (
                 <tr
-                  key={invoice.id}
+                  key={subscription.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={invoice.image_url}
-                        className="rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      />
-                      <p>{invoice.name}</p>
+                      <p>{subscription.name}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.product_type || '-'}
+                    {subscription.product_type || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.data_type || '-'}
+                    {subscription.data_type || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.date ? formatDateToLocal(invoice.date) : '-'}
+                    {subscription.date ? formatDateToLocal(subscription.date) : '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.employeeName || '-'}
+                    {subscription.employeeName || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.export_date ? formatDateToLocal(invoice.export_date) : '-'}
+                    {subscription.export_date ? formatDateToLocal(subscription.export_date) : '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.tracking_number || '-'}
+                    {subscription.tracking_number || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.package_months || '-'}
+                    {subscription.package_months || '-'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {invoice.notes || '-'}
+                    {subscription.notes || '-'}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={invoice.id} />
-                      <DeleteInvoice id={invoice.id} />
+                      <Link
+                        href={`/dashboard/subscriptions/${subscription.id}/detail`}
+                        className="rounded-md border p-2 hover:bg-gray-100"
+                        title="Chi tiết"
+                      >
+                        <EyeIcon className="w-5" />
+                      </Link>
+                      <Updatesubscription id={subscription.id} />
+                      <Deletesubscription id={subscription.id} />
                     </div>
                   </td>
                 </tr>

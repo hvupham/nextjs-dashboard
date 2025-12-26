@@ -1,12 +1,13 @@
 // Revenue
-export { fetchRevenue, fetchLatestInvoices, fetchCardData } from './revenue';
+export { fetchRevenue, fetchLatestSubscriptions, fetchCardData } from './revenue';
 
-// Invoices
+// subscriptions
 export {
-    fetchFilteredInvoices,
-    fetchInvoicesPages,
-    fetchInvoiceById,
-} from './invoices';
+    fetchFilteredSubscriptions,
+    fetchSubscriptionsPages,
+    fetchSubscriptionById,
+    fetchMonthlyPaymentsBySubscriptionId,
+} from './subscriptions';
 
 // Users
 export { fetchUsers, fetchUserById } from './users';

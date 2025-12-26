@@ -16,7 +16,7 @@ const links = [
   { name: 'Trang chủ', href: '/dashboard', icon: HomeIcon },
   {
     name: 'Hóa đơn',
-    href: '/dashboard/invoices',
+    href: '/dashboard/subscriptions',
     icon: DocumentDuplicateIcon,
   },
   { name: 'Khách hàng', href: '/dashboard/customers', icon: UserGroupIcon },

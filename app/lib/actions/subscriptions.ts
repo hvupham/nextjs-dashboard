@@ -10,13 +10,13 @@ const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 const FormSchema = z.object({
     id: z.string(),
     customerId: z.string({
-        invalid_type_error: 'Please select a customer.',
+        invalid_type_error: 'Vui lòng chọn khách hàng.',
     }),
     amount: z.coerce
         .number()
-        .gt(0, { message: 'Please enter an amount greater than $0.' }),
+        .gt(0, { message: 'Vui lòng nhập số tiền lớn hơn $0.' }),
     status: z.enum(['pending', 'paid'], {
-        required_error: 'Please select an invoice status.',
+        required_error: 'Vui lòng chọn trạng thái hóa đơn.',
     }),
     date: z.string(),
     productType: z.string().optional(),
@@ -29,8 +29,8 @@ const FormSchema = z.object({
     notes: z.string().optional(),
 });
 
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const Createsubscription = FormSchema.omit({ id: true, date: true });
+const Updatesubscription = FormSchema.omit({ id: true, date: true });
 
 export type State = {
     errors?: {
@@ -49,9 +49,9 @@ export type State = {
     message?: string | null;
 };
 
-export async function createInvoice(prevState: State, formData: FormData) {
+export async function createsubscription(prevState: State, formData: FormData) {
     // Validate form using Zod
-    const validatedFields = CreateInvoice.safeParse({
+    const validatedFields = Createsubscription.safeParse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
@@ -69,7 +69,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Create Invoice.',
+            message: 'Các trường bắt buộc bị thiếu. Không thể tạo hóa đơn.',
         };
     }
 
@@ -81,27 +81,27 @@ export async function createInvoice(prevState: State, formData: FormData) {
     // Insert data into the database
     try {
         await sql`
-      INSERT INTO invoices (customer_id, amount, status, date, product_type, data_type, sim_status, employee_id, export_date, tracking_number, package_months, notes)
+      INSERT INTO subscriptions (customer_id, amount, status, date, product_type, data_type, sim_status, employee_id, export_date, tracking_number, package_months, notes)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date}, ${productType ?? null}, ${dataType ?? null}, ${simStatus ?? null}, ${employeeId ?? null}, ${exportDate ?? null}, ${trackingNumber ?? null}, ${packageMonths ?? null}, ${notes ?? null})
     `;
     } catch (error) {
         // If a database error occurs, return a more specific error.
         return {
-            message: 'Database Error: Failed to Create Invoice.',
+            message: 'Lỗi cơ sở dữ liệu: Không thể tạo hóa đơn.',
         };
     }
 
-    // Revalidate the cache for the invoices page and redirect the user.
-    revalidatePath('/dashboard/invoices');
-    redirect('/dashboard/invoices');
+    // Revalidate the cache for the subscriptions page and redirect the user.
+    revalidatePath('/dashboard/subscriptions');
+    redirect('/dashboard/subscriptions');
 }
 
-export async function updateInvoice(
+export async function updatesubscription(
     id: string,
     prevState: State,
     formData: FormData,
 ) {
-    const validatedFields = UpdateInvoice.safeParse({
+    const validatedFields = Updatesubscription.safeParse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
@@ -118,7 +118,7 @@ export async function updateInvoice(
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Update Invoice.',
+            message: 'Các trường bắt buộc bị thiếu. Không thể cập nhật hóa đơn.',
         };
     }
 
@@ -127,22 +127,22 @@ export async function updateInvoice(
 
     try {
         await sql`
-      UPDATE invoices
+      UPDATE subscriptions
       SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}, product_type = ${productType ?? null}, data_type = ${dataType ?? null}, sim_status = ${simStatus ?? null}, employee_id = ${employeeId ?? null}, export_date = ${exportDate ?? null}, tracking_number = ${trackingNumber ?? null}, package_months = ${packageMonths ?? null}, notes = ${notes ?? null}
       WHERE id = ${id}
     `;
     } catch (error) {
-        return { message: 'Database Error: Failed to Update Invoice.' };
+        return { message: 'Lỗi cơ sở dữ liệu: Không thể cập nhật hóa đơn.' };
     }
 
-    revalidatePath('/dashboard/invoices');
-    redirect('/dashboard/invoices');
+    revalidatePath('/dashboard/subscriptions');
+    redirect('/dashboard/subscriptions');
 }
 
-export async function deleteInvoice(id: string) {
-    throw new Error('Failed to Delete Invoice');
+export async function deletesubscription(id: string) {
+    throw new Error('Không thể xóa hóa đơn');
 
     // Unreachable code block
-    await sql`DELETE FROM invoices WHERE id = ${id}`;
-    revalidatePath('/dashboard/invoices');
+    await sql`DELETE FROM subscriptions WHERE id = ${id}`;
+    revalidatePath('/dashboard/subscriptions');
 }

@@ -11,8 +11,7 @@ export async function fetchCustomerById(id: string): Promise<Customer | undefine
         id,
         name,
         email,
-        phone_number,
-        image_url
+        phone_number
       FROM customers
       WHERE id = ${id}
     `;
@@ -58,8 +57,7 @@ export async function fetchFilteredCustomers(
 		  customers.id,
 		  customers.name,
 		  customers.email,
-		  customers.phone_number,
-		  customers.image_url
+		  customers.phone_number
 		FROM customers
 		WHERE
 		  customers.name ILIKE ${`%${query}%`} OR

@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
+import { CustomerField, Subscription } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
@@ -9,19 +9,19 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { State, updateInvoice } from '@/app/lib/actions';
+import { State, updatesubscription } from '@/app/lib/actions';
 import { useActionState } from 'react';
 
-export default function EditInvoiceForm({
-  invoice,
+export default function EditsubscriptionForm({
+  subscription,
   customers,
 }: {
-  invoice: InvoiceForm;
+  subscription: Subscription;
   customers: CustomerField[];
 }) {
   const initialState: State = { message: null, errors: {} };
-  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
-  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+  const updatesubscriptionWithId = updatesubscription.bind(null, subscription.id);
+  const [state, formAction] = useActionState(updatesubscriptionWithId, initialState);
 
 
   return (
@@ -37,7 +37,7 @@ export default function EditInvoiceForm({
               id="customer"
               name="customerId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={invoice.customer_id}
+              defaultValue={subscription.customer_id}
             >
               <option value="" disabled>
                 Chọn một khách hàng
@@ -52,7 +52,7 @@ export default function EditInvoiceForm({
           </div>
         </div>
 
-        {/* Invoice Amount */}
+        {/* subscription Amount */}
         <div className="mb-4">
           <label htmlFor="amount" className="mb-2 block text-sm font-medium">
             Chọn số tiền
@@ -64,7 +64,7 @@ export default function EditInvoiceForm({
                 name="amount"
                 type="number"
                 step="0.01"
-                defaultValue={invoice.amount}
+                defaultValue={subscription.amount}
                 placeholder="Enter USD amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -73,7 +73,7 @@ export default function EditInvoiceForm({
           </div>
         </div>
 
-        {/* Invoice Status */}
+        {/* subscription Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
             Đặt trạng thái hóa đơn
@@ -86,7 +86,7 @@ export default function EditInvoiceForm({
                   name="status"
                   type="radio"
                   value="pending"
-                  defaultChecked={invoice.status === 'pending'}
+                  defaultChecked={subscription.status === 'pending'}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -102,7 +102,7 @@ export default function EditInvoiceForm({
                   name="status"
                   type="radio"
                   value="paid"
-                  defaultChecked={invoice.status === 'paid'}
+                  defaultChecked={subscription.status === 'paid'}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -125,7 +125,7 @@ export default function EditInvoiceForm({
             id="productType"
             name="productType"
             type="text"
-            defaultValue={invoice.product_type || ''}
+            defaultValue={subscription.product_type || ''}
             placeholder="VD: SIM, Data, v.v..."
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
           />
@@ -140,7 +140,7 @@ export default function EditInvoiceForm({
             id="dataType"
             name="dataType"
             type="text"
-            defaultValue={invoice.data_type || ''}
+            defaultValue={subscription.data_type || ''}
             placeholder="VD: 4G, 5G, v.v..."
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
           />
@@ -155,7 +155,7 @@ export default function EditInvoiceForm({
             id="trackingNumber"
             name="trackingNumber"
             type="text"
-            defaultValue={invoice.tracking_number || ''}
+            defaultValue={subscription.tracking_number || ''}
             placeholder="Nhập số theo dõi"
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
           />
@@ -170,7 +170,7 @@ export default function EditInvoiceForm({
             id="packageMonths"
             name="packageMonths"
             type="number"
-            defaultValue={invoice.package_months || ''}
+            defaultValue={subscription.package_months || ''}
             placeholder="VD: 12"
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
           />
@@ -184,7 +184,7 @@ export default function EditInvoiceForm({
           <textarea
             id="notes"
             name="notes"
-            defaultValue={invoice.notes || ''}
+            defaultValue={subscription.notes || ''}
             placeholder="Nhập ghi chú"
             rows={3}
             className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
@@ -193,7 +193,7 @@ export default function EditInvoiceForm({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/invoices"
+          href="/dashboard/subscriptions"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Hủy bỏ

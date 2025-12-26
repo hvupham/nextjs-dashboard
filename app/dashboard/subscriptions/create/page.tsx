@@ -1,8 +1,8 @@
 export const dynamic = 'force-dynamic';
 
-import Form from '@/app/ui/invoices/create-form';
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers, fetchInvoiceById } from '@/app/lib/data';
+import Form from '@/app/ui/subscriptions/create-form';
+import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
+import { fetchCustomers } from '@/app/lib/data';
 
 export default async function Page() {
     const customers = await fetchCustomers();
@@ -11,10 +11,10 @@ export default async function Page() {
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: 'Hóa đơn', href: '/dashboard/invoices' },
+                    { label: 'Hóa đơn', href: '/dashboard/subscriptions' },
                     {
                         label: 'Tạo hóa đơn',
-                        href: '/dashboard/invoices/create',
+                        href: '/dashboard/subscriptions/create',
                         active: true,
                     },
                 ]}
