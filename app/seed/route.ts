@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
-import { customers, invoices, products, revenue, users } from '../lib/placeholder-data';
+import { customers, subscriptions, products, revenue, users, monthly_payments } from '../lib/placeholder-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -43,11 +43,11 @@ async function seedUsers() {
   return insertedUsers;
 }
 
-async function seedInvoices() {
+async function seedsubscriptions() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
   await sql`
-    CREATE TABLE IF NOT EXISTS invoices (
+    CREATE TABLE IF NOT EXISTS subscriptions (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       customer_id UUID NOT NULL,
       amount INT NOT NULL,
@@ -64,48 +64,57 @@ async function seedInvoices() {
     );
   `;
 
-  // Add new columns to existing invoices table if they don't exist
+  // Add new columns to existing subscriptions table if they don't exist
   await sql`
     DO $$ 
     BEGIN 
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='product_type') THEN
-        ALTER TABLE invoices ADD COLUMN product_type VARCHAR(255);
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='product_type') THEN
+        ALTER TABLE subscriptions ADD COLUMN product_type VARCHAR(255);
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='data_type') THEN
-        ALTER TABLE invoices ADD COLUMN data_type VARCHAR(255);
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='data_type') THEN
+        ALTER TABLE subscriptions ADD COLUMN data_type VARCHAR(255);
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='sim_status') THEN
-        ALTER TABLE invoices ADD COLUMN sim_status VARCHAR(50);
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='sim_status') THEN
+        ALTER TABLE subscriptions ADD COLUMN sim_status VARCHAR(50);
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='employee_id') THEN
-        ALTER TABLE invoices ADD COLUMN employee_id UUID;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='employee_id') THEN
+        ALTER TABLE subscriptions ADD COLUMN employee_id UUID;
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='export_date') THEN
-        ALTER TABLE invoices ADD COLUMN export_date DATE;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='export_date') THEN
+        ALTER TABLE subscriptions ADD COLUMN export_date DATE;
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='tracking_number') THEN
-        ALTER TABLE invoices ADD COLUMN tracking_number VARCHAR(255);
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='tracking_number') THEN
+        ALTER TABLE subscriptions ADD COLUMN tracking_number VARCHAR(255);
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='package_months') THEN
-        ALTER TABLE invoices ADD COLUMN package_months INT DEFAULT 1;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='package_months') THEN
+        ALTER TABLE subscriptions ADD COLUMN package_months INT DEFAULT 1;
       END IF;
-      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='notes') THEN
-        ALTER TABLE invoices ADD COLUMN notes TEXT;
+      IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='subscriptions' AND column_name='notes') THEN
+        ALTER TABLE subscriptions ADD COLUMN notes TEXT;
       END IF;
     END $$;
   `;
 
-  const insertedInvoices = await Promise.all(
-    invoices.map(
-      (invoice) => sql`
-        INSERT INTO invoices (customer_id, amount, status, date, product_type, data_type, sim_status, employee_id, export_date, tracking_number, package_months, notes)
-        VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date}, ${invoice.product_type ?? null}, ${invoice.data_type ?? null}, ${invoice.sim_status ?? null}, ${invoice.employee_id ?? null}, ${invoice.export_date ?? null}, ${invoice.tracking_number ?? null}, ${invoice.package_months ?? null}, ${invoice.notes ?? null})
-        ON CONFLICT (id) DO NOTHING;
+  const insertedsubscriptions = await Promise.all(
+    subscriptions.map(
+      (subscription) => sql`
+        INSERT INTO subscriptions (customer_id, amount, status, date, product_type, data_type, sim_status, employee_id, export_date, tracking_number, package_months, notes)
+        VALUES (${subscription.customer_id}, ${subscription.amount}, ${subscription.status}, ${subscription.date}, ${subscription.product_type ?? null}, ${subscription.data_type ?? null}, ${subscription.sim_status ?? null}, ${subscription.employee_id ?? null}, ${subscription.export_date ?? null}, ${subscription.tracking_number ?? null}, ${subscription.package_months ?? null}, ${subscription.notes ?? null})
+        ON CONFLICT (id) DO NOTHING
+        RETURNING id;
       `,
     ),
   );
 
-  return insertedInvoices;
+  // Flatten and filter the results to get actual IDs and subscription data
+  const subscriptionResults = insertedsubscriptions
+    .filter(result => result && result.length > 0)
+    .map((result, index) => ({
+      id: result[0].id,
+      ...subscriptions[index],
+    }));
+
+  return subscriptionResults;
 }
 
 async function seedCustomers() {
@@ -116,8 +125,7 @@ async function seedCustomers() {
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL,
-      phone_number VARCHAR(20),
-      image_url VARCHAR(255) NOT NULL
+      phone_number VARCHAR(20)
     );
   `;
 
@@ -134,8 +142,8 @@ async function seedCustomers() {
   const insertedCustomers = await Promise.all(
     customers.map(
       (customer) => sql`
-        INSERT INTO customers (id, name, email, phone_number, image_url)
-        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.phone_number ?? null}, ${customer.image_url})
+        INSERT INTO customers (id, name, email, phone_number)
+        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.phone_number ?? null})
         ON CONFLICT (id) DO NOTHING;
       `,
     ),
@@ -193,13 +201,13 @@ async function seedProducts() {
   return insertedProducts;
 }
 
-async function seedMonthlyPayments() {
+async function seedMonthlyPayments(subscriptions: any[]) {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
   await sql`
     CREATE TABLE IF NOT EXISTS monthly_payments (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      invoice_id UUID NOT NULL REFERENCES invoices(id),
+      subscription_id UUID NOT NULL REFERENCES subscriptions(id),
       payment_month DATE NOT NULL,
       payment_status VARCHAR(50) DEFAULT 'pending',
       amount INT,
@@ -207,18 +215,40 @@ async function seedMonthlyPayments() {
     );
   `;
 
-  return [];
+  // Create monthly payments starting from subscription date for package_months duration
+  const insertedMonthlyPayments = [];
+
+  for (const subscription of subscriptions) {
+    const startDate = new Date(subscription.date);
+    const monthlyAmount = Math.floor(subscription.amount / subscription.package_months);
+
+    // Create payment records for each month in the package
+    for (let i = 0; i < subscription.package_months; i++) {
+      const paymentDate = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+      const paymentMonth = paymentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+      const isPaid = subscription.status === 'paid';
+      const paidDate = isPaid ? new Date(paymentDate.getFullYear(), paymentDate.getMonth() + 1, 5).toISOString().split('T')[0] : null;
+
+      const result = await sql`
+        INSERT INTO monthly_payments (subscription_id, payment_month, payment_status, amount, paid_date)
+        VALUES (${subscription.id}, ${paymentMonth}, ${isPaid ? 'paid' : 'pending'}, ${monthlyAmount}, ${paidDate})
+        ON CONFLICT (id) DO NOTHING
+        RETURNING id;
+      `;
+      insertedMonthlyPayments.push(result);
+    }
+  }
+
+  return insertedMonthlyPayments;
 }
 
 export async function GET() {
   try {
-
-
     // Run all seed functions sequentially
     await seedUsers();
     await seedCustomers();
-    await seedInvoices();
-    await seedMonthlyPayments();
+    const subscriptionsWithIds = await seedsubscriptions();
+    await seedMonthlyPayments(subscriptionsWithIds);
     await seedRevenue();
     await seedProducts();
 

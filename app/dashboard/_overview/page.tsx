@@ -1,23 +1,23 @@
 "use client";
 import CardWrapper, { Card } from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
+import Latestsubscriptions from '@/app/ui/dashboard/latest-subscriptions';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchCardData } from '@/app/lib/data'; // Remove fetchLatestInvoices
+import { fetchCardData } from '@/app/lib/data'; // Remove fetchLatestsubscriptions
 import { Suspense } from 'react';
 import {
     RevenueChartSkeleton,
-    LatestInvoicesSkeleton,
+    LatestsubscriptionsSkeleton,
     CardsSkeleton,
 } from '@/app/ui/skeletons';
 
 export default async function Page() {
-    // Remove `const latestInvoices = await fetchLatestInvoices()`
+    // Remove `const latestsubscriptions = await fetchLatestsubscriptions()`
     const {
-        numberOfInvoices,
+        numberOfsubscriptions,
         numberOfCustomers,
-        totalPaidInvoices,
-        totalPendingInvoices,
+        totalPaidsubscriptions,
+        totalPendingsubscriptions,
     } = await fetchCardData();
 
     return (
@@ -26,9 +26,9 @@ export default async function Page() {
                 Bảng điều khiển
             </h1>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <Card title="Collected" value={totalPaidInvoices} type="collected" />
-                <Card title="Pending" value={totalPendingInvoices} type="pending" />
-                <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+                <Card title="Collected" value={totalPaidsubscriptions} type="collected" />
+                <Card title="Pending" value={totalPendingsubscriptions} type="pending" />
+                <Card title="Total subscriptions" value={numberOfsubscriptions} type="subscriptions" />
                 <Card
                     title="Total Customers"
                     value={numberOfCustomers}
