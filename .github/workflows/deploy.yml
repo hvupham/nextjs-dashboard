@@ -39,7 +39,6 @@ jobs:
       - name: Push Docker image to ECR
         run: docker push 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/next-app:latest
 
-      # 7️⃣ Deploy trên EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -47,7 +46,16 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
+            # Login ECR
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+            docker login --username AWS --password-stdin 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+            # Pull image
             docker pull 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/next-app:latest
+
+            # Stop & remove old container (nếu có)
             docker stop nextjs-container || true
             docker rm nextjs-container || true
+
+            # Run container mới
             docker run -d -p 3000:3000 --name nextjs-container 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/next-app:latest
