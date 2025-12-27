@@ -50,4 +50,4 @@ jobs:
             docker pull 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
             docker stop nextjs-container || true
             docker rm nextjs-container || true
-            docker run -d -p 3000:3000 --name nextjs-container 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+            docker run -d -p 3000:3000 --name nextjs-container 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
