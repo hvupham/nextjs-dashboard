@@ -25,7 +25,7 @@ jobs:
       - name: Login to ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
-          docker login --username AWS --password-stdin 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          docker login --username AWS --password-stdin 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
       # 4️⃣ Build Docker image (trên GitHub Actions)
       - name: Build Docker image
@@ -33,11 +33,11 @@ jobs:
 
       # 5️⃣ Tag image cho ECR
       - name: Tag Docker image
-        run: docker tag nextjs-app:latest 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+        run: docker tag nextjs-app:latest 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
 
       # 6️⃣ Push image lên ECR
       - name: Push Docker image to ECR
-        run: docker push 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+        run: docker push 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
 
       # 7️⃣ Deploy trên EC2
       - name: Deploy to EC2
@@ -47,7 +47,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker pull 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+            docker pull 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
             docker stop nextjs-container || true
             docker rm nextjs-container || true
-            docker run -d -p 3000:3000 --name nextjs-container 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/next-app:latest
+            docker run -d -p 3000:3000 --name nextjs-container 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
