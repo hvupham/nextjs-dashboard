@@ -1,0 +1,53 @@
+name: Deploy Next.js to EC2 via ECR
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2️⃣ Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 3️⃣ Login ECR
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+          docker login --username AWS --password-stdin 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      # 4️⃣ Build Docker image (trên GitHub Actions)
+      - name: Build Docker image
+        run: docker build -t nextjs-app .
+
+      # 5️⃣ Tag image cho ECR
+      - name: Tag Docker image
+        run: docker tag nextjs-app:latest 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+
+      # 6️⃣ Push image lên ECR
+      - name: Push Docker image to ECR
+        run: docker push 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+
+      # 7️⃣ Deploy trên EC2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker pull 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest
+            docker stop nextjs-container || true
+            docker rm nextjs-container || true
+            docker run -d -p 3000:3000 --name nextjs-container 123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nextjs-app:latest

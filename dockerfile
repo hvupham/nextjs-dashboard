@@ -1,23 +1,17 @@
-# Stage 1: build
-FROM node:20-alpine AS builder
+# Build stage
+FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm
-RUN pnpm install
+COPY package*.json ./
+RUN npm install
 COPY . .
-RUN pnpm build
+RUN npm run build
 
-# Stage 2: production
-FROM node:20-alpine
+# Production stage
+FROM node:18-alpine
 WORKDIR /app
-
-# Cài pnpm ở stage production luôn
-RUN npm install -g pnpm
-
-# Copy code + build từ stage builder
-COPY --from=builder /app ./
-
-ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm install --production
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 EXPOSE 3000
-
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
