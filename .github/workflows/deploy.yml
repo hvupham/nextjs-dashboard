@@ -58,4 +58,4 @@ jobs:
             docker rm nextjs-container || true
 
             # Run container mới
-            docker run -d -p 3000:3000 --name nextjs-container 508137168655.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/next-app:latest
+            docker run -d   --env-file /home/ec2-user/.env   -p 80:3000   --name nextjs-container  508137168655.dkr.ecr.us-east-1.amazonaws.com/next-app:latest
