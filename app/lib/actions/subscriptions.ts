@@ -140,9 +140,10 @@ export async function updatesubscription(
 }
 
 export async function deletesubscription(id: string) {
-    throw new Error('Không thể xóa hóa đơn');
 
     // Unreachable code block
+    // xác nhận xem có muốn xóa không
+    
     await sql`DELETE FROM subscriptions WHERE id = ${id}`;
     revalidatePath('/dashboard/subscriptions');
 }
