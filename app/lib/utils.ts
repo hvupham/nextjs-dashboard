@@ -1,9 +1,10 @@
 import { Revenue } from './definitions';
 
-export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('en-US', {
+export const formatCurrency = (amount: number, locale: string = 'ja-JP') => {
+  return (amount / 100).toLocaleString(locale, {
     style: 'currency',
-    currency: 'USD',
+    currency: 'JPY',
+    maximumFractionDigits: 0,
   });
 };
 
@@ -12,13 +13,11 @@ export const formatDateToLocal = (
   locale: string = 'en-US',
 ) => {
   const date = new Date(dateStr);
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  const formatter = new Intl.DateTimeFormat(locale, options);
-  return formatter.format(date);
+  const day = date.toLocaleString(locale, { day: '2-digit' });
+  const month = date.toLocaleString(locale, { month: '2-digit' });
+  const year = date.toLocaleString(locale, { year: 'numeric' });
+
+  return `${day}-${month}-${year}`;
 };
 
 export const generateYAxis = (revenue: Revenue[]) => {
@@ -29,7 +28,7 @@ export const generateYAxis = (revenue: Revenue[]) => {
   const topLabel = Math.ceil(highestRecord / 1000) * 1000;
 
   for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`);
+    yAxisLabels.push(`¥${i / 1000}K`);
   }
 
   return { yAxisLabels, topLabel };

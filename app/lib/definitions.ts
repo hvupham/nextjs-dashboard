@@ -62,6 +62,7 @@ export type SubscriptionsTable = {
   data_type?: string;
   sim_status?: string;
   employee_id?: string;
+  employee_name?: string;
   export_date?: string;
   tracking_number?: string;
   package_months?: number;

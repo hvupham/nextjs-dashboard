@@ -1,8 +1,8 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { fetchSubscriptionById, fetchMonthlyPaymentsBySubscriptionId } from '@/app/lib/data';
+import { fetchMonthlyPaymentsBySubscriptionId, fetchSubscriptionById } from '@/app/lib/data';
 import { formatCurrency, formatDateToLocal } from '@/app/lib/utils';
-import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, TruckIcon, UserIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, PlusIcon, TruckIcon, UserIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 // Status Badge Component
 const Badge = ({ status }: { status: string }) => {
@@ -165,18 +165,17 @@ export default async function SubscriptionDetailPage({
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tháng thanh toán</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Số tiền</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Trạng thái</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Ngày thanh toán</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Hạn thanh toán</th>
+                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Ngày thanh toán</th> */}
+
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {monthlyPayments.map((payment) => (
                   <tr key={payment.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatDateToLocal(payment.payment_month)}
-                    </td>
+
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {formatCurrency(payment.amount * 100)}
                     </td>

@@ -1,5 +1,5 @@
 import postgres from 'postgres';
-import { SubscriptionsTable, SubscriptionForm } from '../definitions';
+import { SubscriptionsTable } from '../definitions';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -12,12 +12,20 @@ export async function fetchFilteredSubscriptions(
     sortOrder: 'ASC' | 'DESC' = 'DESC',
 ) {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const validSortFields = ['amount', 'date', 'name'];
-    const sortField = validSortFields.includes(sortBy) ? sortBy : 'date';
-
-    let orderField = 'subscriptions.date';
-    if (sortField === 'name') orderField = 'customers.name';
-    else if (sortField === 'amount') orderField = 'subscriptions.amount';
+    const sortFieldMap: Record<string, string> = {
+        amount: 'subscriptions.amount',
+        date: 'subscriptions.date',
+        name: 'customers.name',
+        product_type: 'subscriptions.product_type',
+        data_type: 'subscriptions.data_type',
+        employee_name: 'users.name',
+        export_date: 'subscriptions.export_date',
+        tracking_number: 'subscriptions.tracking_number',
+        package_months: 'subscriptions.package_months',
+        notes: 'subscriptions.notes',
+    };
+    const orderField = sortFieldMap[sortBy] || sortFieldMap.date;
+    const safeSortOrder: 'ASC' | 'DESC' = sortOrder === 'ASC' ? 'ASC' : 'DESC';
 
     try {
         const subscriptions = await sql<SubscriptionsTable[]>`
@@ -30,6 +38,7 @@ export async function fetchFilteredSubscriptions(
         subscriptions.data_type,
         subscriptions.sim_status,
         subscriptions.employee_id,
+                users.name as employee_name,
         subscriptions.export_date,
         subscriptions.tracking_number,
         subscriptions.package_months,
@@ -38,13 +47,14 @@ export async function fetchFilteredSubscriptions(
         customers.email
       FROM subscriptions
       JOIN customers ON subscriptions.customer_id = customers.id
+            LEFT JOIN users ON subscriptions.employee_id = users.id
       WHERE
         customers.name ILIKE ${`%${query}%`} OR
         customers.email ILIKE ${`%${query}%`} OR
         subscriptions.amount::text ILIKE ${`%${query}%`} OR
         subscriptions.date::text ILIKE ${`%${query}%`} OR
         subscriptions.status ILIKE ${`%${query}%`}
-      ORDER BY ${sql(orderField)} ${sql.unsafe(sortOrder)}
+            ORDER BY ${sql(orderField)} ${sql.unsafe(safeSortOrder)}
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
