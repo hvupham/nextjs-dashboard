@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation';
 const links = [
   { name: 'Trang chủ', href: '/dashboard', icon: HomeIcon },
   {
-    name: 'Hóa đơn',
+    name: 'Đăng Ký',
     href: '/dashboard/subscriptions',
     icon: DocumentDuplicateIcon,
   },

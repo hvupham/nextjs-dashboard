@@ -1,11 +1,10 @@
-import Link from 'next/link';
-import { Updatesubscription, Deletesubscription } from '@/app/ui/subscriptions/buttons';
-import SubscriptionStatus from '@/app/ui/subscriptions/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredSubscriptions, fetchUserById } from '@/app/lib/data/index';
+import { fetchFilteredSubscriptions } from '@/app/lib/data/index';
+import { formatDateToLocal } from '@/app/lib/utils';
 import { SortButton } from '@/app/ui/sort-button';
-import { fetchUsersByIds } from '@/app/lib/actions/users';
+import { Deletesubscription, Updatesubscription } from '@/app/ui/subscriptions/buttons';
+import SubscriptionStatus from '@/app/ui/subscriptions/status';
 import { EyeIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 export default async function subscriptionsTable({
   query,
@@ -16,35 +15,14 @@ export default async function subscriptionsTable({
   query: string;
   currentPage: number;
   sortBy?: string;
-  sortOrder?: string;
+  sortOrder?: 'ASC' | 'DESC';
 }) {
-  const rawsubscriptions = await fetchFilteredSubscriptions(query, currentPage, sortBy, sortOrder as 'ASC' | 'DESC');
-  const employeeIds = Array.from(
-    new Set(
-      rawsubscriptions
-        .map(i => i.employee_id)
-        .filter((id): id is string => Boolean(id))
-    )
-  );
+  const rawsubscriptions = await fetchFilteredSubscriptions(query, currentPage, sortBy, sortOrder);
 
-  console.log('Customer IDs:', employeeIds);
-  const users = await fetchUsersByIds(employeeIds);
-
-  const userMap = Object.fromEntries(
-    users.map(u => [u.id, u])
-  );
-
-
-  const subscriptions = rawsubscriptions.map(subscription => {
-    const employeeId = subscription.employee_id;
-
-    return {
-      ...subscription,
-      employeeName: employeeId
-        ? userMap[employeeId]?.name ?? 'Unassigned'
-        : 'Unassigned',
-    };
-  });
+  const subscriptions = rawsubscriptions.map(subscription => ({
+    ...subscription,
+    employeeName: subscription.employee_name ?? 'Unassigned',
+  }));
 
 
 
@@ -114,28 +92,76 @@ export default async function subscriptionsTable({
                   />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Loại sản phẩm
+                  <SortButton
+                    field="product_type"
+                    label="Loại sản phẩm"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Loại dữ liệu
+                  <SortButton
+                    field="data_type"
+                    label="Loại dữ liệu"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Ngày nhận SIM
+                  <SortButton
+                    field="date"
+                    label="Ngày nhận SIM"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Nhân viên chốt
+                  <SortButton
+                    field="employee_name"
+                    label="Nhân viên chốt"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Ngày xuất SIM
+                  <SortButton
+                    field="export_date"
+                    label="Ngày xuất SIM"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Mã gửi đơn
+                  <SortButton
+                    field="tracking_number"
+                    label="Mã gửi đơn"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Cước tháng
+                  <SortButton
+                    field="package_months"
+                    label="Cước tháng"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Ghi chú
+                  <SortButton
+                    field="notes"
+                    label="Ghi chú"
+                    currentSortBy={sortBy}
+                    currentSortOrder={sortOrder}
+                    baseUrl="/dashboard/subscriptions"
+                  />
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Chỉnh sửa</span>
