@@ -1,7 +1,8 @@
+import { date } from 'zod/v4';
 import { Revenue } from './definitions';
 
 export const formatCurrency = (amount: number, locale: string = 'ja-JP') => {
-  return (amount / 100).toLocaleString(locale, {
+  return (amount).toLocaleString(locale, {
     style: 'currency',
     currency: 'JPY',
     maximumFractionDigits: 0,
@@ -19,6 +20,10 @@ export const formatDateToLocal = (
 
   return `${day}-${month}-${year}`;
 };
+export const getMonthfromDate = (dateStr: string, locale: string = 'en-US') => {
+  const date = new Date(dateStr);
+  return date.toLocaleString(locale, { month: '2-digit' });
+}
 
 export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis

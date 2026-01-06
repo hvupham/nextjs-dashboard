@@ -76,7 +76,7 @@ export default function Form() {
                 >
                     Hủy
                 </Link>
-                <Button type="submit">Tạo khách hàng</Button>
+                <Button type="submit">Thêm khách hàng</Button>
             </div>
         </form>
     );
