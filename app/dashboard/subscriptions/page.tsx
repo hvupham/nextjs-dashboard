@@ -32,7 +32,7 @@ export default async function Page(props: {
                 <h1 className={`${lusitana.className} text-2xl`}>Đăng ký</h1>
             </div>
             <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-                <Search placeholder="Tìm kiếm hóa đơn..." />
+                <Search placeholder="Nhập tên khách hàng..." />
                 <Createsubscription />
             </div>
             <Suspense key={`${query}-${currentPage}-${sortBy}-${sortOrder}`} fallback={<SubscriptionsTableSkeleton />}>

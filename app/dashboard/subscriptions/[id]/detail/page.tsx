@@ -1,8 +1,9 @@
 import { fetchMonthlyPaymentsBySubscriptionId, fetchSubscriptionById } from '@/app/lib/data';
-import { formatCurrency, formatDateToLocal } from '@/app/lib/utils';
+import { formatCurrency, formatDateToLocal, getMonthfromDate } from '@/app/lib/utils';
 import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, PlusIcon, TruckIcon, UserIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ConfirmPaymentButton } from '@/app/ui/subscriptions/confirm-payment-button';
 
 // Status Badge Component
 const Badge = ({ status }: { status: string }) => {
@@ -165,19 +166,22 @@ export default async function SubscriptionDetailPage({
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">tháng</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Số tiền</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Trạng thái</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Hạn thanh toán</th>
                   {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Ngày thanh toán</th> */}
-
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Hành động</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {monthlyPayments.map((payment) => (
                   <tr key={payment.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {payment.paid_date ? getMonthfromDate(payment.paid_date) : '-'}
+                    </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {formatCurrency(payment.amount * 100)}
+                      {payment.amount}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {payment.payment_status === 'paid' ? (
@@ -192,8 +196,15 @@ export default async function SubscriptionDetailPage({
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {payment.paid_date ? formatDateToLocal(payment.paid_date) : '-'}
+                    </td> */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <ConfirmPaymentButton 
+                        paymentId={payment.id} 
+                        subscriptionId={subscription.id}
+                        isPaid={payment.payment_status === 'paid'}
+                      />
                     </td>
                   </tr>
                 ))}

@@ -146,3 +146,33 @@ export async function deletesubscription(id: string) {
     await sql`DELETE FROM subscriptions WHERE id = ${id}`;
     revalidatePath('/dashboard/subscriptions');
 }
+
+export async function confirmMonthlyPayment(paymentId: string, subscriptionId: string) {
+    try {
+        // Fetch current payment status
+        const currentPayment = await sql<any[]>`
+            SELECT payment_status FROM monthly_payments
+            WHERE id = ${paymentId} AND subscription_id = ${subscriptionId}
+        `;
+
+        if (currentPayment.length === 0) {
+            return { success: false, message: 'Không tìm thấy ghi chép thanh toán.' };
+        }
+
+        const isCurrentlyPaid = currentPayment[0].payment_status === 'paid';
+        const paidDate = isCurrentlyPaid ? null : new Date().toISOString().split('T')[0];
+        const newStatus = isCurrentlyPaid ? 'pending' : 'paid';
+
+        await sql`
+            UPDATE monthly_payments
+            SET payment_status = ${newStatus}, paid_date = ${paidDate}
+            WHERE id = ${paymentId} AND subscription_id = ${subscriptionId}
+        `;
+        revalidatePath(`/dashboard/subscriptions/${subscriptionId}/detail`);
+        const message = isCurrentlyPaid ? 'Đã hủy xác nhận thanh toán.' : 'Xác nhận thanh toán thành công.';
+        return { success: true, message };
+    } catch (error) {
+        console.error('Error confirming payment:', error);
+        return { success: false, message: 'Lỗi cơ sở dữ liệu: Không thể cập nhật trạng thái thanh toán.' };
+    }
+}
