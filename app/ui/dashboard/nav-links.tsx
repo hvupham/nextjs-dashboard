@@ -6,16 +6,15 @@ import {
   UserGroupIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline';
-
 import clsx from 'clsx';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Trang chủ', href: '/dashboard', icon: HomeIcon, requiredRole: null },
+  { name: 'Trang chủ', href: '/dashboard', icon: HomeIcon, requiredRole: 'admin' },
   {
     name: 'Đăng Ký',
     href: '/dashboard/subscriptions',
@@ -24,13 +23,14 @@ const links = [
   },
   { name: 'Khách hàng', href: '/dashboard/customers', icon: UserGroupIcon, requiredRole: null },
   { name: 'Sản phẩm', href: '/dashboard/products', icon: ShoppingBagIcon, requiredRole: null },
-  { name: 'Người dùng', href: '/dashboard/users', icon: UsersIcon, requiredRole: 'admin' },
+  { name: 'Nhân viên', href: '/dashboard/users', icon: UsersIcon, requiredRole: 'admin' },
 ];
 
 export default function NavLinks() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const userRole = session?.user?.role;
+  console.log('NavLinks User Role:', userRole);
 
   return (
     <>

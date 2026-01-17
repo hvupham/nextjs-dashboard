@@ -1,9 +1,9 @@
-import { unstable_noStore as noStore } from 'next/cache';
+import { fetchCardData } from '@/app/lib/data';
 import { Card } from '@/app/ui/dashboard/cards';
-import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import LatestSubscriptions from '@/app/ui/dashboard/latest-subscriptions';
+import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchLatestSubscriptions, fetchRevenue, fetchCardData } from '@/app/lib/data';
+import { unstable_noStore as noStore } from 'next/cache';
 export default async function Page() {
     noStore();
     // const revenue = await fetchRevenue();
@@ -12,7 +12,7 @@ export default async function Page() {
     return (
         <main>
             <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-                Dashboard
+                Quản lý
             </h1>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <Card title="Collected" value={totalPaidsubscriptions} type="collected" />

@@ -1,3 +1,4 @@
+import { auth } from '@/app/lib/auth';
 import { fetchSubscriptionsPages } from '@/app/lib/data';
 import { lusitana } from '@/app/ui/fonts';
 import Search from '@/app/ui/search';
@@ -19,12 +20,17 @@ export default async function Page(props: {
         sortOrder?: string;
     }>;
 }) {
+    const session = await auth();
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
     const sortBy = searchParams?.sortBy || 'date';
     const sortOrder = (searchParams?.sortOrder || 'DESC') as 'ASC' | 'DESC';
-    const totalPages = await fetchSubscriptionsPages(query);
+    
+    // For non-admin users, only show their own subscriptions
+    const employeeId = session?.user?.role === 'user' ? session.user.id : undefined;
+    
+    const totalPages = await fetchSubscriptionsPages(query, employeeId);
 
     return (
         <div className="w-full">
@@ -36,7 +42,7 @@ export default async function Page(props: {
                 <Createsubscription />
             </div>
             <Suspense key={`${query}-${currentPage}-${sortBy}-${sortOrder}`} fallback={<SubscriptionsTableSkeleton />}>
-                <Table query={query} currentPage={currentPage} sortBy={sortBy} sortOrder={sortOrder} />
+                <Table query={query} currentPage={currentPage} sortBy={sortBy} sortOrder={sortOrder} employeeId={employeeId} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
                 <Pagination totalPages={totalPages} />
