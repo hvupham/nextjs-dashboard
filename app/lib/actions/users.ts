@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
 import { z } from 'zod';
+import { requireAdmin } from '@/app/lib/actions/permissions';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -30,6 +31,8 @@ export type UserState = {
 };
 
 export async function createUser(prevState: UserState, formData: FormData) {
+    await requireAdmin();
+    
     const validatedFields = CreateUser.safeParse({
         name: formData.get('name'),
         email: formData.get('email'),
@@ -67,6 +70,8 @@ export async function updateUser(
     prevState: UserState,
     formData: FormData,
 ) {
+    await requireAdmin();
+    
     const validatedFields = UpdateUser.safeParse({
         name: formData.get('name'),
         email: formData.get('email'),
@@ -97,6 +102,8 @@ export async function updateUser(
 }
 
 export async function deleteUser(id: string) {
+    await requireAdmin();
+    
     try {
         await sql`DELETE FROM users WHERE id = ${id}`;
         revalidatePath('/dashboard/users');

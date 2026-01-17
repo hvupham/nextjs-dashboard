@@ -11,13 +11,15 @@ export default async function subscriptionsTable({
   currentPage,
   sortBy = 'date',
   sortOrder = 'DESC',
+  employeeId,
 }: {
   query: string;
   currentPage: number;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
+  employeeId?: string;
 }) {
-  const rawsubscriptions = await fetchFilteredSubscriptions(query, currentPage, sortBy, sortOrder);
+  const rawsubscriptions = await fetchFilteredSubscriptions(query, currentPage, sortBy, sortOrder, employeeId);
 
   const subscriptions = rawsubscriptions.map(subscription => ({
     ...subscription,

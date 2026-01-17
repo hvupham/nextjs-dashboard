@@ -10,6 +10,7 @@ export async function fetchFilteredSubscriptions(
     currentPage: number,
     sortBy: string = 'date',
     sortOrder: 'ASC' | 'DESC' = 'DESC',
+    employeeId?: string, // Add filter by employee for non-admin users
 ) {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
     const sortFieldMap: Record<string, string> = {
@@ -49,11 +50,12 @@ export async function fetchFilteredSubscriptions(
       JOIN customers ON subscriptions.customer_id = customers.id
             LEFT JOIN users ON subscriptions.employee_id = users.id
       WHERE
-        customers.name ILIKE ${`%${query}%`} OR
+        (customers.name ILIKE ${`%${query}%`} OR
         customers.email ILIKE ${`%${query}%`} OR
         subscriptions.amount::text ILIKE ${`%${query}%`} OR
         subscriptions.date::text ILIKE ${`%${query}%`} OR
-        subscriptions.status ILIKE ${`%${query}%`}
+        subscriptions.status ILIKE ${`%${query}%`})
+        ${employeeId ? sql`AND subscriptions.employee_id = ${employeeId}` : sql``}
             ORDER BY ${sql(orderField)} ${sql.unsafe(safeSortOrder)}
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
@@ -65,17 +67,18 @@ export async function fetchFilteredSubscriptions(
     }
 }
 
-export async function fetchSubscriptionsPages(query: string) {
+export async function fetchSubscriptionsPages(query: string, employeeId?: string) {
     try {
         const data = await sql`SELECT COUNT(*)
     FROM subscriptions
     JOIN customers ON subscriptions.customer_id = customers.id
     WHERE
-      customers.name ILIKE ${`%${query}%`} OR
+      (customers.name ILIKE ${`%${query}%`} OR
       customers.email ILIKE ${`%${query}%`} OR
       subscriptions.amount::text ILIKE ${`%${query}%`} OR
       subscriptions.date::text ILIKE ${`%${query}%`} OR
-      subscriptions.status ILIKE ${`%${query}%`}
+      subscriptions.status ILIKE ${`%${query}%`})
+      ${employeeId ? sql`AND subscriptions.employee_id = ${employeeId}` : sql``}
   `;
 
         const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
