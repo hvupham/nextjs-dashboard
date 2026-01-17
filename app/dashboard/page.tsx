@@ -1,11 +1,22 @@
+import { auth } from '@/app/lib/auth';
+import { redirect } from 'next/navigation';
 import { fetchCardData } from '@/app/lib/data';
 import { Card } from '@/app/ui/dashboard/cards';
 import LatestSubscriptions from '@/app/ui/dashboard/latest-subscriptions';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import { lusitana } from '@/app/ui/fonts';
 import { unstable_noStore as noStore } from 'next/cache';
+
 export default async function Page() {
+    const session = await auth();
+    
+    // Only admin can access dashboard - users redirect to subscriptions
+    if (!session?.user || session.user.role !== 'admin') {
+        redirect('/dashboard/subscriptions');
+    }
+    
     noStore();
+    
     // const revenue = await fetchRevenue();
     // const latestsubscriptions = await fetchLatestsubscriptions();
     const { totalPaidsubscriptions, totalPendingsubscriptions, numberOfsubscriptions, numberOfCustomers } = await fetchCardData();

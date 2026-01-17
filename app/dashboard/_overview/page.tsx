@@ -1,10 +1,11 @@
-"use client";
 import CardWrapper, { Card } from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import Latestsubscriptions from '@/app/ui/dashboard/latest-subscriptions';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchCardData } from '@/app/lib/data'; // Remove fetchLatestsubscriptions
+import { fetchCardData } from '@/app/lib/data';
 import { Suspense } from 'react';
+import { auth } from '@/app/lib/auth';
+import { redirect } from 'next/navigation';
 import {
     RevenueChartSkeleton,
     LatestsubscriptionsSkeleton,
@@ -12,7 +13,13 @@ import {
 } from '@/app/ui/skeletons';
 
 export default async function Page() {
-    // Remove `const latestsubscriptions = await fetchLatestsubscriptions()`
+    const session = await auth();
+    
+    // Only admin can access dashboard overview - users redirect to subscriptions
+    if (!session?.user || session.user.role !== 'admin') {
+        redirect('/dashboard/subscriptions');
+    }
+    
     const {
         numberOfsubscriptions,
         numberOfCustomers,

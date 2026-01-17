@@ -1,8 +1,10 @@
+import { auth } from '@/app/lib/auth';
 import { fetchFilteredCustomers } from '@/app/lib/data/index';
 import CustomersTable from '@/app/ui/customers/table';
 import Search from '@/app/ui/search';
 import { CreateCustomer } from '@/app/ui/customers/buttons';
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 
 export default async function Page(props: {
     searchParams?: Promise<{
@@ -11,6 +13,13 @@ export default async function Page(props: {
         sortOrder?: string;
     }>;
 }) {
+    const session = await auth();
+    
+    // Verify user is authenticated
+    if (!session?.user) {
+        redirect('/login');
+    }
+    
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
     const sortBy = searchParams?.sortBy || 'name';

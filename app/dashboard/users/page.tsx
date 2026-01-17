@@ -1,7 +1,9 @@
+import { auth } from '@/app/lib/auth';
 import { fetchUsers } from '@/app/lib/data/index';
 import { CreateUser } from '@/app/ui/users/buttons';
 import UsersTableComponent from '@/app/ui/users/table';
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -9,6 +11,13 @@ export default async function Page(props: {
     sortOrder?: string;
   }>;
 }) {
+  const session = await auth();
+  
+  // Only admin can access users
+  if (!session?.user || session.user.role !== 'admin') {
+    redirect('/dashboard');
+  }
+  
   const searchParams = await props.searchParams;
   const sortBy = searchParams?.sortBy || 'name';
   const sortOrder = (searchParams?.sortOrder || 'ASC') as 'ASC' | 'DESC';
