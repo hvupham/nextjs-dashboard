@@ -1,9 +1,12 @@
 import { auth } from '@/app/lib/auth';
 import { fetchCustomers } from '@/app/lib/data';
+import { fetchPaymentsByProduct } from '@/app/lib/data/payments';
 import { fetchProductWithCustomer } from '@/app/lib/data/products-with-customer';
 import { fetchSIMStatuses } from '@/app/lib/data/sim-statuses';
 import { AssignCustomerForm } from '@/app/ui/products/assign-customer-form';
 import { DeleteProduct, UpdateProduct } from '@/app/ui/products/buttons';
+import { PaymentSection } from '@/app/ui/products/payment-section';
+
 import { SIMCardDetail } from '@/app/ui/products/sim-card-detail';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
@@ -44,6 +47,9 @@ export default async function Page(props: {
 
   // Fetch all customers for the form
   const customers = await fetchCustomers();
+
+  // Fetch payments for this product
+  const payments = await fetchPaymentsByProduct(id);
 
   return (
     <div className="w-full space-y-6">
@@ -142,6 +148,15 @@ export default async function Page(props: {
           </div>
         </div>
       </div>
+
+      {/* Payment Section */}
+      <PaymentSection 
+        productId={product.id}
+        productMsn={product.msn || ''}
+        customerId={product.customer_id}
+        customerName={customerInfo.customer_name}
+        payments={payments}
+      />
     </div>
   );
 }

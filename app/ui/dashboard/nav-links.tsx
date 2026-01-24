@@ -1,10 +1,11 @@
 'use client';
 import {
-  DocumentDuplicateIcon,
-  HomeIcon,
-  ShoppingBagIcon,
-  UserGroupIcon,
-  UsersIcon,
+    CreditCardIcon,
+    DocumentDuplicateIcon,
+    HomeIcon,
+    ShoppingBagIcon,
+    UserGroupIcon,
+    UsersIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
@@ -23,6 +24,7 @@ const links = [
   },
   { name: 'Khách hàng', href: '/dashboard/customers', icon: UserGroupIcon, requiredRole: null },
   { name: 'Sản phẩm', href: '/dashboard/products', icon: ShoppingBagIcon, requiredRole: null },
+  { name: 'Thanh toán', href: '/dashboard/payments', icon: CreditCardIcon, requiredRole: null },
   { name: 'Nhân viên', href: '/dashboard/users', icon: UsersIcon, requiredRole: 'admin' },
 ];
 

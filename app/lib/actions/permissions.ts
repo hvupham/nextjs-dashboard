@@ -23,3 +23,13 @@ export async function requireAdmin() {
     throw new Error('Chỉ admin mới có thể thực hiện hành động này');
   }
 }
+
+export async function requireAuth() {
+  const session = await auth();
+  
+  if (!session?.user) {
+    throw new Error('Bạn cần đăng nhập để thực hiện hành động này');
+  }
+  
+  return session.user;
+}

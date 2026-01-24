@@ -17,6 +17,34 @@ export type Customer = {
   phone_number?: string;
 };
 
+export type Payment = {
+  id: string;
+  product_id: string;
+  customer_id: string;
+  billing_month: string; // DATE format
+  amount: number;
+  status: 'pending' | 'paid' | 'overdue';
+  payment_date?: string;
+  notes?: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type PaymentsTable = {
+  id: string;
+  product_id: string;
+  customer_id: string;
+  billing_month: string;
+  amount: number;
+  status: 'pending' | 'paid' | 'overdue';
+  payment_date?: string;
+  notes?: string;
+  // For display
+  msn?: string;
+  customer_name?: string;
+  customer_email?: string;
+};
+
 export type Subscription = {
   id: string;
   customer_id: string;

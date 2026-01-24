@@ -1,6 +1,5 @@
 import postgres from 'postgres';
-import { Customer, CustomerField, CustomersTableType, FormattedCustomersTable } from '../definitions';
-import { formatCurrency } from '../utils';
+import { Customer, CustomersTableType, FormattedCustomersTable } from '../definitions';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -25,10 +24,12 @@ export async function fetchCustomerById(id: string): Promise<Customer | undefine
 
 export async function fetchCustomers() {
     try {
-        const customers = await sql<CustomerField[]>`
+        const customers = await sql<any[]>`
       SELECT
         id,
-        name
+        name,
+        email,
+        phone_number
       FROM customers
       ORDER BY name ASC
     `;
