@@ -1,11 +1,12 @@
 import { auth } from '@/app/lib/auth';
-import { redirect } from 'next/navigation';
 import { fetchCardData } from '@/app/lib/data';
 import { Card } from '@/app/ui/dashboard/cards';
 import LatestSubscriptions from '@/app/ui/dashboard/latest-subscriptions';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import { lusitana } from '@/app/ui/fonts';
 import { unstable_noStore as noStore } from 'next/cache';
+import { redirect } from 'next/navigation';
+import SimStatusCounts from '../ui/dashboard/sim-status-counts';
 
 export default async function Page() {
     const session = await auth();
@@ -39,6 +40,7 @@ export default async function Page() {
                 <RevenueChart />
                 <LatestSubscriptions />
             </div>
+            <SimStatusCounts />
         </main>
     );
 }

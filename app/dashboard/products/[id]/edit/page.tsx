@@ -1,29 +1,50 @@
-import { fetchProductById } from '@/app/lib/data';
+import { auth } from '@/app/lib/auth';
+import { fetchProductById } from '@/app/lib/data/products';
+import { fetchSIMStatuses } from '@/app/lib/data/sim-statuses';
+import EditForm from '@/app/ui/products/edit-form-sim';
 import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
-import Form from '@/app/ui/products/edit-form';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const product = await fetchProductById(id);
+export default async function Page(props: {
+  params: Promise<{ id: string }>;
+}) {
+  const session = await auth();
+
+  // Verify user is authenticated
+  if (!session?.user) {
+    redirect('/login');
+  }
+
+  const params = await props.params;
+  const { id } = params;
+
+  let product;
+  try {
+    product = await fetchProductById(id);
+  } catch (error) {
+    notFound();
+  }
 
   if (!product) {
     notFound();
   }
 
+  // Fetch SIM statuses
+  const simStatuses = await fetchSIMStatuses();
+
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Products', href: '/dashboard/products' },
+          { label: 'Sản phẩm', href: '/dashboard/products' },
           {
-            label: 'Edit Product',
+            label: `Chỉnh sửa SIM Card`,
             href: `/dashboard/products/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form product={product} />
+      <EditForm product={product} simStatuses={simStatuses} />
     </main>
   );
 }

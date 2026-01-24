@@ -1,7 +1,11 @@
+import { fetchSIMStatuses } from '@/app/lib/data/sim-statuses';
+import Form from '@/app/ui/products/create-form-sim';
 import Breadcrumbs from '@/app/ui/subscriptions/breadcrumbs';
-import Form from '@/app/ui/products/create-form';
 
 export default async function Page() {
+  // Fetch SIM statuses
+  const simStatuses = await fetchSIMStatuses();
+
   return (
     <main>
       <Breadcrumbs
@@ -14,7 +18,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form />
+      <Form simStatuses={simStatuses} />
     </main>
   );
 }

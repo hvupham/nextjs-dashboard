@@ -113,30 +113,71 @@ export type UsersTable = {
 
 export type Product = {
   id: string;
-  name: string;
-  type: 'sim' | 'pocket-wifi';
   monthly_price: number;
   description: string;
   stock: number;
   status: 'available' | 'out-of-stock';
+  customer_id?: string;
+  // SIM Card specific fields
+  msn?: string;
+  imsi?: string;
+  carrier?: string;
+  imei?: string;
+  iccid?: string;
+  device_type?: string;
+  sim_type?: 'physical' | 'multi' | 'esim';
+  capacity?: string;
+  shipping_date?: string;
+  expiration_date?: string;
+  activation_date?: string;
+  options?: string;
+  sim_status_id?: number;
+  sim_status?: 'active' | 'not-activated' | 'resetting' | 'in-stock' | 'suspended';
+  // Data usage tracking
+  current_month_usage?: string;
+  previous_month_usage?: string;
 };
 
 export type ProductsTable = {
   id: string;
-  name: string;
-  type: 'sim' | 'pocket-wifi';
   monthly_price: number;
   description: string;
   stock: number;
   status: 'available' | 'out-of-stock';
+  customer_id?: string;
+  msn?: string;
+  carrier?: string;
+  capacity?: string;
+  iccid?: string;
+  sim_status_id?: number;
+  sim_status?: 'active' | 'not-activated' | 'resetting' | 'in-stock' | 'suspended';
+  shipping_date?: string;
+  activation_date?: string;
+  current_month_usage?: string;
+  previous_month_usage?: string;
 };
 
 export type ProductForm = {
   id: string;
-  name: string;
-  type: 'sim' | 'pocket-wifi';
   monthly_price: number;
   description: string;
   stock: number;
   status: 'available' | 'out-of-stock';
+  customer_id?: string;
+  msn?: string;
+  imsi?: string;
+  carrier?: string;
+  imei?: string;
+  iccid?: string;
+  device_type?: string;
+  sim_type?: 'physical' | 'multi' | 'esim';
+  capacity?: string;
+  shipping_date?: string;
+  expiration_date?: string;
+  activation_date?: string;
+  options?: string;
+  sim_status_id?: number;
+  sim_status?: 'active' | 'not-activated' | 'resetting' | 'in-stock' | 'suspended';
+  current_month_usage?: string;
+  previous_month_usage?: string;
 };

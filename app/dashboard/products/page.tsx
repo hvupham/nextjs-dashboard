@@ -1,14 +1,16 @@
 import { auth } from '@/app/lib/auth';
 import { fetchProducts } from '@/app/lib/data';
+import { fetchSIMStatuses } from '@/app/lib/data/sim-statuses';
 import { CreateProduct } from '@/app/ui/products/buttons';
 import ProductsTableComponent from '@/app/ui/products/table';
-import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 export default async function Page(props: {
   searchParams?: Promise<{
     sortBy?: string;
     sortOrder?: string;
+    statusFilter?: string;
   }>;
 }) {
   const session = await auth();
@@ -21,8 +23,10 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const sortBy = searchParams?.sortBy || 'name';
   const sortOrder = (searchParams?.sortOrder || 'ASC') as 'ASC' | 'DESC';
+  const statusFilter = searchParams?.statusFilter ? Number(searchParams.statusFilter) : undefined;
 
-  const products = await fetchProducts(sortBy, sortOrder);
+  const products = await fetchProducts(sortBy, sortOrder, statusFilter);
+  const simStatuses = await fetchSIMStatuses();
 
   return (
     <div className="w-full">
@@ -33,7 +37,13 @@ export default async function Page(props: {
         <CreateProduct />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <ProductsTableComponent products={products} sortBy={sortBy} sortOrder={sortOrder} />
+        <ProductsTableComponent 
+          products={products} 
+          sortBy={sortBy} 
+          sortOrder={sortOrder}
+          simStatuses={simStatuses}
+          currentStatusFilter={statusFilter}
+        />
       </Suspense>
     </div>
   );

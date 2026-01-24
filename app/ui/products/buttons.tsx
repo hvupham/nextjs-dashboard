@@ -1,3 +1,5 @@
+'use client';
+
 import { deleteProduct } from '@/app/lib/actions/products';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
